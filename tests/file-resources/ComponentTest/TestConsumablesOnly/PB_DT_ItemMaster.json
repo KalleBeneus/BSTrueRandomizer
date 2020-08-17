@@ -1,0 +1,86 @@
+[
+  {
+    "Key": "craftable_consumable_1",
+    "Value": {
+      "IconPath": "21",
+      "ItemType": "ECarriedCatalog::Potion",
+      "NameStrKey": "ITEM_NAME_Potion",
+      "DescriptionStrKey": "ITEM_EXPLAIN_Potion",
+      "max": 9,
+      "buyPrice": 200,
+      "sellPrice": 20,
+      "Producted": "Event_01_001_0000",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "craftable_consumable_2",
+    "Value": {
+      "IconPath": "22",
+      "ItemType": "ECarriedCatalog::Potion",
+      "NameStrKey": "ITEM_NAME_HighPotion",
+      "DescriptionStrKey": "ITEM_EXPLAIN_HighPotion",
+      "max": 5,
+      "buyPrice": 1000,
+      "sellPrice": 100,
+      "Producted": "Event_06_001_0000",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "unique_consumable_1",
+    "Value": {
+      "IconPath": "272",
+      "ItemType": "ECarriedCatalog::Potion",
+      "NameStrKey": "ITEM_NAME_Iron",
+      "DescriptionStrKey": "ITEM_EXPLAIN_Iron",
+      "max": 99,
+      "buyPrice": 600,
+      "sellPrice": 60,
+      "Producted": "None",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "onlycraftable_consumable_1",
+    "Value": {
+      "IconPath": "272",
+      "ItemType": "ECarriedCatalog::Potion",
+      "NameStrKey": "ITEM_NAME_Iron",
+      "DescriptionStrKey": "ITEM_EXPLAIN_Iron",
+      "max": 99,
+      "buyPrice": 600,
+      "sellPrice": 60,
+      "Producted": "None",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  }
+]

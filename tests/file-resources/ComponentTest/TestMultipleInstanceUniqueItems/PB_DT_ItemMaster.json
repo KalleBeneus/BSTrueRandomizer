@@ -1,0 +1,107 @@
+[
+  {
+    "Key": "craftable_weapon_1",
+    "Value": {
+      "IconPath": "25",
+      "ItemType": "ECarriedCatalog::Weapon",
+      "NameStrKey": "ITEM_NAME_HighEther",
+      "DescriptionStrKey": "ITEM_EXPLAIN_HighEther",
+      "max": 5,
+      "buyPrice": 500,
+      "sellPrice": 50,
+      "Producted": "Event_06_001_0000",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "craftable_weapon_2",
+    "Value": {
+      "IconPath": "26",
+      "ItemType": "ECarriedCatalog::Weapon",
+      "NameStrKey": "ITEM_NAME_ExEther",
+      "DescriptionStrKey": "ITEM_EXPLAIN_ExEther",
+      "max": 3,
+      "buyPrice": 5000,
+      "sellPrice": 500,
+      "Producted": "None",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "craftable_weapon_3",
+    "Value": {
+      "IconPath": "26",
+      "ItemType": "ECarriedCatalog::Weapon",
+      "NameStrKey": "ITEM_NAME_ExEther",
+      "DescriptionStrKey": "ITEM_EXPLAIN_ExEther",
+      "max": 3,
+      "buyPrice": 5000,
+      "sellPrice": 500,
+      "Producted": "None",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "craftable_weapon_4",
+    "Value": {
+      "IconPath": "26",
+      "ItemType": "ECarriedCatalog::Weapon",
+      "NameStrKey": "ITEM_NAME_ExEther",
+      "DescriptionStrKey": "ITEM_EXPLAIN_ExEther",
+      "max": 3,
+      "buyPrice": 5000,
+      "sellPrice": 500,
+      "Producted": "None",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "unique_weapon_1",
+    "Value": {
+      "IconPath": "26",
+      "ItemType": "ECarriedCatalog::Weapon",
+      "NameStrKey": "ITEM_NAME_ExEther",
+      "DescriptionStrKey": "ITEM_EXPLAIN_ExEther",
+      "max": 3,
+      "buyPrice": 5000,
+      "sellPrice": 500,
+      "Producted": "None",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  }
+]

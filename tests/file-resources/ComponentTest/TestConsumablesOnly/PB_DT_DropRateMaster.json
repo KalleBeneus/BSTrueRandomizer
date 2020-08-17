@@ -1,0 +1,52 @@
+[
+  {
+    "Key": "Treasurebox_SIP002",
+    "Value": {
+      "Id": 54,
+      "ShardId": "None",
+      "ShardRate": 0.0,
+      "RareItemId": "unique_consumable_1",
+      "RareItemQuantity": 1,
+      "RareItemRate": 100.0,
+      "CommonItemId": "None",
+      "CommonItemQuantity": 0,
+      "CommonRate": 0.0,
+      "RareIngredientId": "None",
+      "RareIngredientQuantity": 0,
+      "RareIngredientRate": 0.0,
+      "CommonIngredientId": "None",
+      "CommonIngredientQuantity": 0,
+      "CommonIngredientRate": 0.0,
+      "CoinType": "EDropCoin::None",
+      "CoinOverride": 0,
+      "CoinRate": 0.0,
+      "AreaChangeTreasureFlag": false,
+      "ItemType": "EItemType::Consumable"
+    }
+  },
+  {
+    "Key": "Treasurebox_SIP003",
+    "Value": {
+      "Id": 55,
+      "ShardId": "None",
+      "ShardRate": 0.0,
+      "RareItemId": "craftable_consumable_1",
+      "RareItemQuantity": 1,
+      "RareItemRate": 100.0,
+      "CommonItemId": "None",
+      "CommonItemQuantity": 0,
+      "CommonRate": 0.0,
+      "RareIngredientId": "None",
+      "RareIngredientQuantity": 0,
+      "RareIngredientRate": 0.0,
+      "CommonIngredientId": "None",
+      "CommonIngredientQuantity": 0,
+      "CommonIngredientRate": 0.0,
+      "CoinType": "EDropCoin::None",
+      "CoinOverride": 0,
+      "CoinRate": 0.0,
+      "AreaChangeTreasureFlag": false,
+      "ItemType": "EItemType::Accessory"
+    }
+  }
+]

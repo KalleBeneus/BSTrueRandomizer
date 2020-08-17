@@ -1,0 +1,52 @@
+[
+  {
+    "Key": "craftable_consumable_1",
+    "Value": {
+      "Type": "ECraftType::Craft",
+      "CraftItemId": "craftable_consumable_1",
+      "CraftValue": 1,
+      "RankMin": 0,
+      "RankMax": 0,
+      "Ingredient1Id": "BatFeather",
+      "Ingredient1Total": 1,
+      "Ingredient2Id": "MeltedBone",
+      "Ingredient2Total": 1,
+      "Ingredient3Id": "None",
+      "Ingredient3Total": 0,
+      "Ingredient4Id": "None",
+      "Ingredient4Total": 0,
+      "OpenKeyRecipeID": "None",
+      "openCondition": "EPBCraftRequirement::None",
+      "openParameter": 0,
+      "firstTimeBonusSpecialEffectId": "None",
+      "FirstBonusType": [],
+      "FirstBonusValue": [],
+      "Alkhahest": 1
+    }
+  },
+  {
+    "Key": "onlycraftable_consumable_1",
+    "Value": {
+      "Type": "ECraftType::Craft",
+      "CraftItemId": "onlycraftable_consumable_1",
+      "CraftValue": 1,
+      "RankMin": 0,
+      "RankMax": 0,
+      "Ingredient1Id": "Giantrattail",
+      "Ingredient1Total": 1,
+      "Ingredient2Id": "MonsterBirdTears",
+      "Ingredient2Total": 1,
+      "Ingredient3Id": "None",
+      "Ingredient3Total": 0,
+      "Ingredient4Id": "None",
+      "Ingredient4Total": 0,
+      "OpenKeyRecipeID": "None",
+      "openCondition": "EPBCraftRequirement::None",
+      "openParameter": 0,
+      "firstTimeBonusSpecialEffectId": "None",
+      "FirstBonusType": [],
+      "FirstBonusValue": [],
+      "Alkhahest": 1
+    }
+  }
+]
