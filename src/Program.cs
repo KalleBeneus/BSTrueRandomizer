@@ -1,6 +1,6 @@
 ﻿using System;
+using BSTrueRandomizer.mod;
 using BSTrueRandomizer.model.composite;
-using BSTrueRandomizer.modification;
 using BSTrueRandomizer.service;
 using BSTrueRandomizer.util;
 using CommandLine;
@@ -24,13 +24,13 @@ namespace BSTrueRandomizer
 
             Random random = CreateSeededRandom(opts);
             var itemRandomizerService = new ItemRandomizerService(random);
-
             var randomizerService = new ItemPlacementRandomizerMod(itemRandomizerService);
-            randomizerService.RandomizeItems(gameFiles);
+            var typeRandomizerService = new DropTypeRandomizerMod(itemRandomizerService);
 
+
+            randomizerService.RandomizeItems(gameFiles);
             if (opts.IsRandomizeType)
             {
-                var typeRandomizerService = new DropTypeRandomizerMod();
                 typeRandomizerService.RandomizeTypesWithLimitedFixedKeyLocations(gameFiles.DropList);
             }
 

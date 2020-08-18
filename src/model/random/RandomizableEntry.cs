@@ -7,7 +7,7 @@
 
         public int OccurrenceCount { get; private set; }
 
-        public bool IsCraftable { get; }
+        public bool IsCraftable { get; set; }
 
         public RandomizableEntry(string itemName, string itemType, bool isCraftable)
         {
@@ -17,14 +17,19 @@
             OccurrenceCount = 1;
         }
 
-        public void IncrementOccurrence(int number = 1)
+        public void IncrementOccurrence()
         {
-            OccurrenceCount += number;
+            OccurrenceCount++;
         }
 
-        public void DecrementOccurrence(int number = 1)
+        public void DecrementOccurrence()
         {
-            OccurrenceCount -= number;
+            OccurrenceCount--;
+        }
+
+        public void ZeroOccurrence()
+        {
+            OccurrenceCount = 0;
         }
 
         protected bool Equals(RandomizableEntry other)

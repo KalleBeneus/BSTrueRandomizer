@@ -12,7 +12,10 @@ namespace BSTrueRandomizerTest
     [TestClass]
     public class ComponentTest
     {
-        private const string FolderPathOutput = "file-resources/ComponentTest/Output";
+
+        // TODO add test for food randomization
+
+        private const string FolderPathOutput = "file-resources/ComponentTest/Output/";
         private Options _opts;
 
         [TestInitialize]
@@ -44,7 +47,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestMultipleInstanceUniqueItems\";
-            _opts.SeedText = "SeedText-2UniqueItemsInDropAndQuestNoneInCraft";
+            _opts.SeedText = "SeedText-TwoUniquesInDropAndQuestZeroInCraftList";
             var gameFileReader = new GameFileService(_opts.InputPath);
 
             // Act
@@ -84,7 +87,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestMultipleInstanceUniqueItems\";
-            _opts.SeedText = "SeedText-MultipleUniqueItemsAllAssignedToCraft";
+            _opts.SeedText = "SeedText-MultipleUniquesAreAllAssignedToCrafting";
             var gameFileReader = new GameFileService(_opts.InputPath);
 
             // Act
@@ -107,7 +110,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestMultipleInstanceUniqueItems\";
-            _opts.SeedText = "SeedText-TwoCraftablesInDropAndQuestAssignedInMultiple";
+            _opts.SeedText = "SeedText-TwoCraftableInDropAndQuestBothSetAsFindable";
             var gameFileReader = new GameFileService(_opts.InputPath);
 
             // Act

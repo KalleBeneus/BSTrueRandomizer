@@ -2,27 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using BSTrueRandomizer.model;
+using BSTrueRandomizer.service;
 
-namespace BSTrueRandomizer.modification
+namespace BSTrueRandomizer.mod
 {
-    class DropTypeRandomizerMod
+    internal class DropTypeRandomizerMod
     {
-        private readonly Dictionary<string, string> _fixedKeyLocations = new Dictionary<string, string>() {
-            { "VillageKeyBox", "EItemType::Key"},
-            { "PhotoEvent", "EItemType::Key"},
-            { "CertificationboardEvent", "EItemType::Key"},
-            { "Swordsman", "EItemType::Key"},
-            { "Treasurebox_SAN024", "EItemType::Weapon"},
-            { "Treasurebox_TWR019", "EItemType::Key"},
-            { "Treasurebox_KNG021", "EItemType::UniqueCraft"},
-            { "Treasurebox_ARC006", "EItemType::Accessory"}
+        private readonly Dictionary<string, string> _fixedKeyLocations = new Dictionary<string, string>
+        {
+            {"VillageKeyBox", "EItemType::Key"},
+            {"PhotoEvent", "EItemType::Key"},
+            {"CertificationboardEvent", "EItemType::Key"},
+            {"Swordsman", "EItemType::Key"},
+            {"Treasurebox_SAN024", "EItemType::Weapon"},
+            {"Treasurebox_TWR019", "EItemType::Key"},
+            {"Treasurebox_KNG021", "EItemType::UniqueCraft"},
+            {"Treasurebox_ARC006", "EItemType::Accessory"}
         };
+
+        private readonly ItemRandomizerService _randomizerService;
+
+        public DropTypeRandomizerMod(ItemRandomizerService randomizerService)
+        {
+            _randomizerService = randomizerService;
+        }
 
         public void RandomizeTypesWithLimitedFixedKeyLocations(List<DropItemEntry> ItemListToModify)
         {
             int numberOfRandomKeyLocations = 15;
             int numberOfRandomizableEntries = CalculateNumberOfPossibleKeyItemSlots(ItemListToModify);
-            ICollection<int> randomKeyEntryIndexes = GetRandomIndexesForNewKeyEntries(numberOfRandomizableEntries, numberOfRandomKeyLocations);
+            ICollection<int> randomKeyEntryIndexes = _randomizerService.GetRandomOpenSlotIndexes(numberOfRandomizableEntries, numberOfRandomKeyLocations);
 
             RandomizeKeyItemEntries(randomKeyEntryIndexes, ItemListToModify);
         }
@@ -38,6 +47,7 @@ namespace BSTrueRandomizer.modification
                     numberOfRandomizableEntries++;
                 }
             }
+
             numberOfRandomizableEntries -= _fixedKeyLocations.Count;
             return numberOfRandomizableEntries;
         }
@@ -50,24 +60,8 @@ namespace BSTrueRandomizer.modification
             {
                 return false;
             }
+
             return true;
-        }
-
-        private ICollection<int> GetRandomIndexesForNewKeyEntries(int numberOfOpenSlots, int numberOfDesiredSlots)
-        {
-            var random = new Random();
-
-            if (numberOfOpenSlots < numberOfDesiredSlots)
-            {
-                throw new ArgumentException(
-                    $"Number of open slots provided ({numberOfOpenSlots}) is less than desired number of slots ({numberOfDesiredSlots})");
-            }
-            var openSlotIndexes = new SortedSet<int>();
-            while (openSlotIndexes.Count < numberOfDesiredSlots)
-            {
-                openSlotIndexes.Add(random.Next(numberOfOpenSlots));
-            }
-            return openSlotIndexes;
         }
 
         private void RandomizeKeyItemEntries(ICollection<int> randomKeyEntryIndexes, List<DropItemEntry> dropList)
@@ -92,6 +86,7 @@ namespace BSTrueRandomizer.modification
                         {
                             itemEntry.Value.ItemType = Constants.ItemTypeOther;
                         }
+
                         currentValidRandomizationEntryIndex++;
                     }
                 }

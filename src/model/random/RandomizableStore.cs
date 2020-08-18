@@ -1,39 +1,66 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BSTrueRandomizer.model.random
 {
     internal class RandomizableStore
     {
-        private readonly Dictionary<string, List<RandomizableEntry>> _itemDict;
+        private readonly Dictionary<string, List<RandomizableEntry>> _availableItems;
+        private readonly Dictionary<string, List<RandomizableEntry>> _unavailableItems;
 
         public RandomizableStore()
         {
-            _itemDict = new Dictionary<string, List<RandomizableEntry>>();
+            _availableItems = new Dictionary<string, List<RandomizableEntry>>();
+            _unavailableItems = new Dictionary<string, List<RandomizableEntry>>();
         }
 
-        public int ItemCountByType(string itemType)
+        public int AvailableItemCountByType(string itemType)
         {
-            return _itemDict[itemType].Count; // TODO add contains checks for all methods taking itemType
+            return _availableItems[itemType].Count; // TODO add contains checks for all methods taking itemType
         }
 
-        public RandomizableEntry PopSingleItemOccurrenceAtIndex(string itemType, int index)
+        public int AvailableNonCraftableItemCountByType(string itemType)
         {
-            RandomizableEntry item = _itemDict[itemType][index];
-            if (item.OccurrenceCount == 1)
+            return _availableItems[itemType].Count(item => !item.IsCraftable);
+        }
+
+        public int UnavailableCraftableItemCountByType(string itemType)
+        {
+            if (!_unavailableItems.ContainsKey(itemType))
             {
-                _itemDict[itemType].RemoveAt(index);
+                return 0;
             }
-            else
-            {
-                item.DecrementOccurrence();
-            }
-            return item;
+            return _unavailableItems[itemType].Count(item => item.IsCraftable);
         }
 
-        public void RemoveItemByType(string itemType, string itemName)
+        public IEnumerable<string> AvailableItemTypes()
         {
-            var itemToRemove = new RandomizableEntry(itemType, itemName, false);
-            _itemDict[itemType].Remove(itemToRemove);
+            return _availableItems.Keys;
+        }
+
+        public string TakeAndDecrementItem(string itemType, int availableItemIndex)
+        {
+            RandomizableEntry item = _availableItems[itemType][availableItemIndex];
+            item.DecrementOccurrence();
+            if (item.OccurrenceCount <= 0)
+            {
+                _availableItems[itemType].RemoveAt(availableItemIndex);
+                AddNewItem(item, _unavailableItems);
+            }
+
+            return item.ItemName;
+        }
+
+        public string TakeAndRemoveNonCraftableItem(string itemType, int availableItemIndex)
+        {
+            RandomizableEntry uniqueItem = _availableItems[itemType]
+                .Where(item => !item.IsCraftable)
+                .ElementAt(availableItemIndex);
+
+            uniqueItem.ZeroOccurrence();
+            _availableItems[itemType].RemoveAt(availableItemIndex);
+            AddNewItem(uniqueItem, _unavailableItems);
+            return uniqueItem.ItemName;
         }
 
         public void AddItem(string itemName, string itemType)
@@ -48,39 +75,51 @@ namespace BSTrueRandomizer.model.random
             AddItem(randomizableItem);
         }
 
-        public void AddItem(RandomizableEntry itemToAdd)
+        private void AddItem(RandomizableEntry itemToAdd)
         {
-            if (!ContainsItem(itemToAdd.ItemName, itemToAdd.ItemType))
+            if (!IsItemAvailable(itemToAdd.ItemName, itemToAdd.ItemType))
             {
-                AddItemByType(itemToAdd);
+                AddNewItem(itemToAdd, _availableItems);
             }
             else if (!itemToAdd.IsCraftable)
             {
                 IncrementItemOccurrence(itemToAdd);
             }
+            else
+            {
+                MarkItemCraftable(itemToAdd);
+            }
         }
 
-        private void AddItemByType(RandomizableEntry itemToAdd)
+        private void AddNewItem(RandomizableEntry itemToAdd, Dictionary<string, List<RandomizableEntry>> targetDict)
         {
             string itemType = itemToAdd.ItemType;
-            if (!_itemDict.ContainsKey(itemType))
+            if (!targetDict.ContainsKey(itemType))
             {
-                _itemDict.Add(itemType, new List<RandomizableEntry>());
+                targetDict.Add(itemType, new List<RandomizableEntry>());
             }
 
-            _itemDict[itemType].Add(itemToAdd);
-        }
-
-        public bool ContainsItem(string itemName, string itemType)
-        {
-            return _itemDict.ContainsKey(itemType) && _itemDict[itemType].Exists(item => item.ItemName.Equals(itemName));
+            targetDict[itemType].Add(itemToAdd);
         }
 
         private void IncrementItemOccurrence(RandomizableEntry itemToAdd)
         {
-            RandomizableEntry existingEntry = _itemDict[itemToAdd.ItemType].Find(entry => entry.Equals(itemToAdd));
+            RandomizableEntry existingEntry = _availableItems[itemToAdd.ItemType].Find(entry => entry.Equals(itemToAdd));
             existingEntry?.IncrementOccurrence();
         }
 
+        private void MarkItemCraftable(RandomizableEntry itemToAdd)
+        {
+            RandomizableEntry existingEntry = _availableItems[itemToAdd.ItemType].Find(entry => entry.Equals(itemToAdd));
+            if (existingEntry != null)
+            {
+                existingEntry.IsCraftable = true;
+            }
+        }
+
+        public bool IsItemAvailable(string itemName, string itemType)
+        {
+            return _availableItems.ContainsKey(itemType) && _availableItems[itemType].Exists(item => item.ItemName.Equals(itemName));
+        }
     }
 }
