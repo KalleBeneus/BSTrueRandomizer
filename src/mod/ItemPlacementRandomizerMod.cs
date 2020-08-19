@@ -19,101 +19,104 @@ namespace BSTrueRandomizer.mod
 
         public void RandomizeItems(GameFiles gameFilesToModify)
         {
-            List<CraftItemEntry> craftList = gameFilesToModify.CraftList;
-            List<DropItemEntry> dropList = gameFilesToModify.DropList;
-            List<QuestItemEntry> questList = gameFilesToModify.QuestList;
+            var randomizableItemStore = new RandomizableStore();
 
-            var availableItems = new RandomizableStore();
+            AddAllItemsToRandomize(gameFilesToModify.DropList, randomizableItemStore);
+            AddAllItemsToRandomize(gameFilesToModify.QuestList, randomizableItemStore);
+            AddAllGourmandQuestFoods(gameFilesToModify.QuestList, randomizableItemStore);
+            AddAllCraftableItemsToRandomize(gameFilesToModify.CraftList, randomizableItemStore);
 
-            AddAllFindableItems(dropList, availableItems);
-            AddAllFindableItems(questList, availableItems);
-            AddAllGourmandQuestFoods(questList, availableItems);
-            AddAllCraftableItems(craftList, availableItems);
-
-            RandomizeDropItems(dropList, availableItems);
-            RandomizeQuestItems(questList, availableItems);
-
-
-            Dictionary<string, int> currentSlotNumberByType = InitializeCurrentSlotCounters(availableItems);
-            Dictionary<string, ICollection<int>> slotRandomizationIndexesByType = FindAllOpenSlotsForRandomization(availableItems);
-            List<CraftItemEntry> newCraftEntries = new List<CraftItemEntry>();
-
-            foreach (CraftItemEntry entry in craftList)
-            {
-                if (IsCraftEntryRandomizable(entry))
-                {
-                    string itemType = entry.GetItemType();
-                    if (!availableItems.IsItemAvailable(entry.GetItemName(), itemType) &&
-                        slotRandomizationIndexesByType[itemType].Count() != 0 &&
-                        currentSlotNumberByType[itemType]++ == slotRandomizationIndexesByType[itemType].First())
-                    {
-                        slotRandomizationIndexesByType[itemType].Remove(slotRandomizationIndexesByType[itemType].First());
-                        string randomItemName = GetRandomNonCraftableItemName(availableItems, itemType);
-                        ReplaceCraftItem(newCraftEntries, entry, randomItemName);
-                    }
-                }
-            }
-            craftList.AddRange(newCraftEntries);
+            RandomizeDropItems(gameFilesToModify.DropList, randomizableItemStore);
+            RandomizeQuestItems(gameFilesToModify.QuestList, randomizableItemStore);
+            RandomizeCraftItems(gameFilesToModify.CraftList, randomizableItemStore);
         }
 
-        private static Dictionary<string, int> InitializeCurrentSlotCounters(RandomizableStore availableItems)
+        private void AddAllItemsToRandomize(IEnumerable<IItemEntry> itemList, RandomizableStore storeToAddTo)
         {
-            var currentSlotNumberByType = new Dictionary<string, int>();
-            foreach (string itemType in availableItems.AvailableItemTypes())
-            {
-                currentSlotNumberByType[itemType] = 0;
-            }
-
-            return currentSlotNumberByType;
+            itemList.Where(IsEntryRandomizableForInput)
+                .ToList()
+                .ForEach(entry => storeToAddTo.AddItem(entry.GetItemName(), entry.GetItemType()));
         }
 
-        private Dictionary<string, ICollection<int>> FindAllOpenSlotsForRandomization(RandomizableStore availableItems)
+        private bool IsEntryRandomizableForInput(IItemEntry entry)
         {
-            var slotRandomizationIndexesByType = new Dictionary<string, ICollection<int>>();
-            foreach (string itemType in availableItems.AvailableItemTypes())
-            {
-                if (IsItemTypeRandomizableForCraftOutput(itemType))
-                {
-                    int numberOfOpenItemSlots = availableItems.UnavailableCraftableItemCountByType(itemType);
-                    int numberOfItemsToAssign = availableItems.AvailableNonCraftableItemCountByType(itemType);
-                    slotRandomizationIndexesByType[itemType] = _randomizerService.GetRandomOpenSlotIndexes(numberOfOpenItemSlots, numberOfItemsToAssign);
-                }
-            }
+            string itemType = entry.GetItemType();
 
-            return slotRandomizationIndexesByType;
+            return entry.IsEntryValid() &&
+                   !"EItemType::CraftingMats".Equals(itemType) &&
+                   !"EItemType::Key".Equals(itemType) &&
+                   !"EItemType::Upgrade".Equals(itemType) &&
+                   !"EItemType::None".Equals(itemType) &&
+                   !"EItemType::Coin".Equals(itemType) &&
+                   !"EItemType::Recipe".Equals(itemType) &&
+                   !"EItemType::Food".Equals(itemType) &&
+                   !"EItemType::Consumable".Equals(itemType);
         }
 
-        private static void ReplaceCraftItem(List<CraftItemEntry> newCraftEntries, CraftItemEntry craftItem, string randomItemName)
+        private static void AddAllGourmandQuestFoods(List<QuestItemEntry> questList, RandomizableStore storeToAddTo)
         {
-            craftItem.Value.CraftItemId = Constants.EntryInfoNone;
-            CraftItemValues newCraftItemValues = craftItem.Value.Copy();
-            newCraftItemValues.CraftItemId = randomItemName;
-            newCraftEntries.Add(new CraftItemEntry(randomItemName, newCraftItemValues));
+            questList.Where(entry => entry.IsGourmandQuest())
+                .ToList()
+                .ForEach(entry => storeToAddTo.AddItem(entry.Value.Item01, Constants.ItemTypeFood));
         }
 
-        private void RandomizeQuestItems(List<QuestItemEntry> questList, RandomizableStore availableItems)
+        private void AddAllCraftableItemsToRandomize(IEnumerable<IItemEntry> craftList, RandomizableStore storeToAddTo)
         {
-            foreach (QuestItemEntry questEntry in questList)
-            {
-                if (questEntry.IsEntryValid() && IsItemTypeRandomizableForOutput(questEntry.GetItemType()))
-                {
-                    questEntry.Value.RewardItem01 = GetRandomItem(availableItems, questEntry.GetItemType());
-                    questEntry.Value.RewardNum01 = 1;
-                }
-            }
+            craftList.Where(IsEntryRandomizableForCraftInput)
+                .ToList()
+                .ForEach(entry => storeToAddTo.AddCraftableItem(entry.GetItemName(), entry.GetItemType()));
+        }
+
+        private bool IsEntryRandomizableForCraftInput(IItemEntry entry)
+        {
+            string itemType = entry.GetItemType();
+
+            return entry.IsEntryValid() &&
+                   !"EItemType::CraftingMats".Equals(itemType) &&
+                   !"EItemType::Key".Equals(itemType) &&
+                   !"EItemType::Upgrade".Equals(itemType) &&
+                   !"EItemType::None".Equals(itemType) &&
+                   !"EItemType::Coin".Equals(itemType) &&
+                   !"EItemType::Food".Equals(itemType) &&
+                   !"EItemType::Recipe".Equals(itemType);
         }
 
         private void RandomizeDropItems(List<DropItemEntry> dropList, RandomizableStore availableItems)
         {
             foreach (DropItemEntry dropEntry in dropList)
             {
-                if (dropEntry.IsEntryValid() && IsItemTypeRandomizableForOutput(dropEntry.GetItemType()))
+                if (IsEntryRandomizableForOutput(dropEntry))
                 {
                     string randomItemName = GetRandomItem(availableItems, dropEntry.GetItemType());
-
                     SetNewItemForDrop(dropEntry, randomItemName);
                 }
             }
+        }
+
+        private bool IsEntryRandomizableForOutput(IItemEntry entry)
+        {
+            string itemType = entry.GetItemType();
+
+            return entry.IsEntryValid() &&
+                   !"EItemType::CraftingMats".Equals(itemType) &&
+                   !"EItemType::Key".Equals(itemType) &&
+                   !"EItemType::Upgrade".Equals(itemType) &&
+                   !"EItemType::None".Equals(itemType) &&
+                   !"EItemType::Coin".Equals(itemType) &&
+                   !"EItemType::Recipe".Equals(itemType);
+        }
+
+        private string GetRandomItem(RandomizableStore availableItems, string itemType)
+        {
+            int availableItemCount = availableItems.AvailableItemCountByType(itemType);
+            int randomIndex = _randomizerService.GetRandomItemIndex(availableItemCount);
+            if (Constants.ItemTypeConsumable.Equals(itemType))
+            {
+                const int decrementAmount = 0;
+                return availableItems.TakeNumberOfItem(itemType, randomIndex, decrementAmount);
+            }
+
+            return availableItems.TakeSingleItem(itemType, randomIndex);
         }
 
         private static void SetNewItemForDrop(DropItemEntry dropEntry, string randomItemName)
@@ -133,75 +136,51 @@ namespace BSTrueRandomizer.mod
             dropEntry.Value.RareIngredientRate = 0.0;
         }
 
-        private string GetRandomItem(RandomizableStore availableItems, string itemType)
+        private void RandomizeQuestItems(List<QuestItemEntry> questList, RandomizableStore availableItems)
         {
-            int availableItemCount = availableItems.AvailableItemCountByType(itemType);
-            int randomIndex = _randomizerService.GetRandomItemIndex(availableItemCount);
-            if (Constants.ItemTypeConsumable.Equals(itemType))
+            foreach (QuestItemEntry questEntry in questList)
             {
-                const int decrementAmount = 0;
-                return availableItems.TakeNumberOfItem(itemType, randomIndex, decrementAmount);
+                if (IsEntryRandomizableForOutput(questEntry))
+                {
+                    questEntry.Value.RewardItem01 = GetRandomItem(availableItems, questEntry.GetItemType());
+                    questEntry.Value.RewardNum01 = 1;
+                }
+            }
+        }
+
+        private void RandomizeCraftItems(List<CraftItemEntry> craftList, RandomizableStore availableItems)
+        {
+            Dictionary<string, IEnumerable<string>> itemsToReplaceByType = FindAllItemsToReplace(availableItems);
+            var newCraftEntries = new List<CraftItemEntry>();
+
+            foreach (CraftItemEntry entry in craftList.Where(IsCraftEntryRandomizableForOutput))
+            {
+                IEnumerable<string> itemsToReplace = itemsToReplaceByType[entry.GetItemType()];
+                if (itemsToReplace.Contains(entry.GetItemName()))
+                {
+                    string randomItemName = GetRandomNonCraftableItemName(availableItems, entry.GetItemType());
+                    newCraftEntries.Add(CreateReplacementCraftEntry(entry, randomItemName));
+                }
             }
 
-            return availableItems.TakeSingleItem(itemType, randomIndex);
+            craftList.AddRange(newCraftEntries);
         }
 
-        private string GetRandomNonCraftableItemName(RandomizableStore availableItems, string itemType)
+        private Dictionary<string, IEnumerable<string>> FindAllItemsToReplace(RandomizableStore availableItems)
         {
-            int availableItemCount = availableItems.AvailableNonCraftableItemCountByType(itemType);
-            int randomIndex = _randomizerService.GetRandomItemIndex(availableItemCount);
-            string randomItemName = availableItems.TakeAllNonCraftableItem(itemType, randomIndex);
-            return randomItemName;
+            var itemsToReplaceDict = new Dictionary<string, IEnumerable<string>>();
+
+            foreach (string itemType in availableItems.AvailableItemTypes().Where(IsItemTypeRandomizableForCraftOutput))
+            {
+                List<string> alreadyAssignedCraftItems = availableItems.GetAllUnavailableCraftableItemNames(itemType);
+                int numberOfItemsLeftToAssign = availableItems.AvailableNonCraftableItemCountByType(itemType);
+                itemsToReplaceDict[itemType] = _randomizerService.GetRandomEntriesFromList(alreadyAssignedCraftItems, numberOfItemsLeftToAssign);
+            }
+
+            return itemsToReplaceDict;
         }
 
-        private void AddAllCraftableItems(IEnumerable<IItemEntry> craftList, RandomizableStore storeToAddTo)
-        {
-            craftList.Where(entry => entry.IsEntryValid() && IsItemTypeRandomizableForCraftInput(entry.GetItemType()))
-                .ToList()
-                .ForEach(entry => storeToAddTo.AddCraftableItem(entry.GetItemName(), entry.GetItemType()));
-        }
-
-        private static void AddAllGourmandQuestFoods(List<QuestItemEntry> questList, RandomizableStore storeToAddTo)
-        {
-            questList.Where(entry => entry.IsGourmandQuest())
-                .ToList()
-                .ForEach(entry => storeToAddTo.AddItem(entry.Value.Item01, Constants.ItemTypeFood));
-        }
-
-        private void AddAllFindableItems(IEnumerable<IItemEntry> itemList, RandomizableStore storeToAddTo)
-        {
-            itemList.Where(entry => entry.IsEntryValid() && IsItemTypeRandomizable(entry.GetItemType()))
-                .ToList()
-                .ForEach(entry => storeToAddTo.AddItem(entry.GetItemName(), entry.GetItemType()));
-        }
-
-        private bool IsItemTypeRandomizable(string itemType)
-        {
-            if ("EItemType::CraftingMats".Equals(itemType)
-                || "EItemType::Key".Equals(itemType)
-                || "EItemType::Upgrade".Equals(itemType)
-                || "EItemType::None".Equals(itemType)
-                || "EItemType::Coin".Equals(itemType)
-                || "EItemType::Recipe".Equals(itemType)
-                || "EItemType::Food".Equals(itemType)
-                || "EItemType::Consumable".Equals(itemType))
-                return false;
-            return true;
-        }
-
-        private bool IsItemTypeRandomizableForOutput(string itemType)
-        {
-            if ("EItemType::CraftingMats".Equals(itemType)
-                || "EItemType::Key".Equals(itemType)
-                || "EItemType::Upgrade".Equals(itemType)
-                || "EItemType::None".Equals(itemType)
-                || "EItemType::Coin".Equals(itemType)
-                || "EItemType::Recipe".Equals(itemType))
-                return false;
-            return true;
-        }
-
-        private bool IsCraftEntryRandomizable(CraftItemEntry craftEntry)
+        private bool IsCraftEntryRandomizableForOutput(CraftItemEntry craftEntry)
         {
             string itemType = craftEntry.GetItemType();
 
@@ -213,30 +192,30 @@ namespace BSTrueRandomizer.mod
 
         private bool IsItemTypeRandomizableForCraftOutput(string itemType)
         {
-            return
-                !"EItemType::CraftingMats".Equals(itemType) &&
-                !"EItemType::Key".Equals(itemType) &&
-                !"EItemType::Upgrade".Equals(itemType) &&
-                !"EItemType::None".Equals(itemType) &&
-                !"EItemType::Coin".Equals(itemType) &&
-                !"EItemType::Consumable".Equals(itemType) &&
-                !"EItemType::Food".Equals(itemType) &&
-                !"EItemType::Recipe".Equals(itemType);
-
+            return !"EItemType::CraftingMats".Equals(itemType) &&
+                   !"EItemType::Key".Equals(itemType) &&
+                   !"EItemType::Upgrade".Equals(itemType) &&
+                   !"EItemType::None".Equals(itemType) &&
+                   !"EItemType::Coin".Equals(itemType) &&
+                   !"EItemType::Consumable".Equals(itemType) &&
+                   !"EItemType::Food".Equals(itemType) &&
+                   !"EItemType::Recipe".Equals(itemType);
         }
 
-        private bool IsItemTypeRandomizableForCraftInput(string itemType)
+        private string GetRandomNonCraftableItemName(RandomizableStore availableItems, string itemType)
         {
-            if ("EItemType::CraftingMats".Equals(itemType)
-                || "EItemType::Key".Equals(itemType)
-                || "EItemType::Upgrade".Equals(itemType)
-                || "EItemType::None".Equals(itemType)
-                || "EItemType::Coin".Equals(itemType)
-                || "EItemType::Food".Equals(itemType)
-                || "EItemType::Recipe".Equals(itemType))
-                return false;
-            return true;
+            int availableItemCount = availableItems.AvailableNonCraftableItemCountByType(itemType);
+            int randomIndex = _randomizerService.GetRandomItemIndex(availableItemCount);
+            string randomItemName = availableItems.TakeAllNonCraftableItem(itemType, randomIndex);
+            return randomItemName;
         }
 
+        private CraftItemEntry CreateReplacementCraftEntry(CraftItemEntry craftItem, string randomItemName)
+        {
+            craftItem.Value.CraftItemId = Constants.EntryInfoNone;
+            CraftItemValues newCraftItemValues = craftItem.Value.Copy();
+            newCraftItemValues.CraftItemId = randomItemName;
+            return new CraftItemEntry(randomItemName, newCraftItemValues);
+        }
     }
 }

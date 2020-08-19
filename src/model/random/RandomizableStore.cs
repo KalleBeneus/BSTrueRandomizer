@@ -24,13 +24,16 @@ namespace BSTrueRandomizer.model.random
             return _availableItems[itemType].Count(item => !item.IsCraftable);
         }
 
-        public int UnavailableCraftableItemCountByType(string itemType)
+        public List<string> GetAllUnavailableCraftableItemNames(string itemType)
         {
             if (!_unavailableItems.ContainsKey(itemType))
             {
-                return 0;
+                return new List<string>();
             }
-            return _unavailableItems[itemType].Count(item => item.IsCraftable);
+            return _unavailableItems[itemType]
+                .Where(item => item.IsCraftable)
+                .Select(item => item.ItemName)
+                .ToList();
         }
 
         public IEnumerable<string> AvailableItemTypes()
