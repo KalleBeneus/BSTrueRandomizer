@@ -136,16 +136,21 @@ namespace BSTrueRandomizer.mod
         private string GetRandomItem(RandomizableStore availableItems, string itemType)
         {
             int availableItemCount = availableItems.AvailableItemCountByType(itemType);
-            int randomIndex = _randomizerService.GetRandomItemIndexByType(itemType, availableItemCount);
-            string randomItemName = availableItems.TakeAndDecrementItem(itemType, randomIndex);
-            return randomItemName;
+            int randomIndex = _randomizerService.GetRandomItemIndex(availableItemCount);
+            if (Constants.ItemTypeConsumable.Equals(itemType))
+            {
+                const int decrementAmount = 0;
+                return availableItems.TakeNumberOfItem(itemType, randomIndex, decrementAmount);
+            }
+
+            return availableItems.TakeSingleItem(itemType, randomIndex);
         }
 
         private string GetRandomNonCraftableItemName(RandomizableStore availableItems, string itemType)
         {
             int availableItemCount = availableItems.AvailableNonCraftableItemCountByType(itemType);
-            int randomIndex = _randomizerService.GetRandomItemIndexByType(itemType, availableItemCount);
-            string randomItemName = availableItems.TakeAndRemoveNonCraftableItem(itemType, randomIndex);
+            int randomIndex = _randomizerService.GetRandomItemIndex(availableItemCount);
+            string randomItemName = availableItems.TakeAllNonCraftableItem(itemType, randomIndex);
             return randomItemName;
         }
 
@@ -163,9 +168,9 @@ namespace BSTrueRandomizer.mod
                 .ForEach(entry => storeToAddTo.AddItem(entry.Value.Item01, Constants.ItemTypeFood));
         }
 
-        private void AddAllFindableItems(IEnumerable<IItemEntry> dropList, RandomizableStore storeToAddTo)
+        private void AddAllFindableItems(IEnumerable<IItemEntry> itemList, RandomizableStore storeToAddTo)
         {
-            dropList.Where(entry => entry.IsEntryValid() && IsItemTypeRandomizable(entry.GetItemType()))
+            itemList.Where(entry => entry.IsEntryValid() && IsItemTypeRandomizable(entry.GetItemType()))
                 .ToList()
                 .ForEach(entry => storeToAddTo.AddItem(entry.GetItemName(), entry.GetItemType()));
         }
@@ -178,7 +183,8 @@ namespace BSTrueRandomizer.mod
                 || "EItemType::None".Equals(itemType)
                 || "EItemType::Coin".Equals(itemType)
                 || "EItemType::Recipe".Equals(itemType)
-                || "EItemType::Food".Equals(itemType))
+                || "EItemType::Food".Equals(itemType)
+                || "EItemType::Consumable".Equals(itemType))
                 return false;
             return true;
         }

@@ -250,7 +250,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestConsumablesOnly\";
-            _opts.SeedText = "SeedText-MultiplesOfSingleConsumable";
+            _opts.SeedText = "SeedText-SingleInstanceConsumableFindableTwice";
             var gameFileReader = new GameFileService(_opts.InputPath);
 
             // Act
@@ -258,7 +258,7 @@ namespace BSTrueRandomizerTest
             GameFiles outputFiles = gameFileReader.ReadAllFiles(FolderPathOutput);
 
             //Assert
-            var singleInstanceConsumableName = "onlycraftable_consumable_1";
+            const string singleInstanceConsumableName = "onlycraftable_consumable_1";
             int count = CountItemsWithNamesContaining(singleInstanceConsumableName, outputFiles.QuestList);
             count += CountItemsWithNamesContaining(singleInstanceConsumableName, outputFiles.DropList);
             Assert.IsTrue(count > 1);

@@ -38,10 +38,15 @@ namespace BSTrueRandomizer.model.random
             return _availableItems.Keys;
         }
 
-        public string TakeAndDecrementItem(string itemType, int availableItemIndex)
+        public string TakeSingleItem(string itemType, int availableItemIndex)
+        {
+            return TakeNumberOfItem(itemType, availableItemIndex, 1);
+        }
+
+        public string TakeNumberOfItem(string itemType, int availableItemIndex, int numberToTake)
         {
             RandomizableEntry item = _availableItems[itemType][availableItemIndex];
-            item.DecrementOccurrence();
+            item.DecrementOccurrence(numberToTake);
             if (item.OccurrenceCount <= 0)
             {
                 _availableItems[itemType].RemoveAt(availableItemIndex);
@@ -51,7 +56,7 @@ namespace BSTrueRandomizer.model.random
             return item.ItemName;
         }
 
-        public string TakeAndRemoveNonCraftableItem(string itemType, int availableItemIndex)
+        public string TakeAllNonCraftableItem(string itemType, int availableItemIndex)
         {
             RandomizableEntry uniqueItem = _availableItems[itemType]
                 .Where(item => !item.IsCraftable)

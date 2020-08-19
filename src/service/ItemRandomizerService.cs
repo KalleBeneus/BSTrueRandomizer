@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using BSTrueRandomizer.Exceptions;
 
 namespace BSTrueRandomizer.service
@@ -13,9 +14,9 @@ namespace BSTrueRandomizer.service
             _random = random;
         }
 
-        public int GetRandomItemIndexByType(string itemType, int availableNumberOfItems)
+        public int GetRandomItemIndex(int availableNumberOfItems)
         {
-            if (availableNumberOfItems == 0)
+            if (availableNumberOfItems <= 0)
             {
                 throw new RandomizationException(
                     "No more items available for randomization. There may be a mismatch of available items and slots to randomize for");

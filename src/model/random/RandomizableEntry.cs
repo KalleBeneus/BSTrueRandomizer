@@ -17,14 +17,14 @@
             OccurrenceCount = 1;
         }
 
-        public void IncrementOccurrence()
+        public void IncrementOccurrence(int number = 1)
         {
-            OccurrenceCount++;
+            OccurrenceCount += number;
         }
 
-        public void DecrementOccurrence()
+        public void DecrementOccurrence(int number = 1)
         {
-            OccurrenceCount--;
+            OccurrenceCount -= number;
         }
 
         public void ZeroOccurrence()
@@ -52,7 +52,8 @@
 
         public override string ToString()
         {
-            return $"{nameof(ItemName)}: {ItemName}, {nameof(ItemType)}: {ItemType}, {nameof(OccurrenceCount)}: {OccurrenceCount}, {nameof(IsCraftable)}: {IsCraftable}";
+            return
+                $"{nameof(ItemName)}: {ItemName}, {nameof(ItemType)}: {ItemType}, {nameof(OccurrenceCount)}: {OccurrenceCount}, {nameof(IsCraftable)}: {IsCraftable}";
         }
     }
 }
