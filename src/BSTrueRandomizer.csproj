@@ -41,4 +41,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="file-resources\" />
+  </ItemGroup>
+
 </Project>
