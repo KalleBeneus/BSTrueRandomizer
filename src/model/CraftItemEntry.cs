@@ -25,6 +25,7 @@ namespace BSTrueRandomizer.model
             {
                 throw new IllegalStateException($"Item reference type has not been correctly set for {GetType().Name} with key '{Key}'");
             }
+
             return Value.ItemReferenceType;
         }
 
@@ -36,6 +37,13 @@ namespace BSTrueRandomizer.model
         public bool IsEntryValid()
         {
             return "ECraftType::Craft".Equals(Value.Type);
+        }
+
+        public bool IsBackerWeapon()
+        {
+            return Constants.ItemTypeWeapon.Equals(GetItemType()) && (Constants.ItemName8BitCoin.Equals(Value.Ingredient1Id) ||
+                                                                      Constants.ItemName16BitCoin.Equals(Value.Ingredient2Id) ||
+                                                                      Constants.ItemName32BitCoin.Equals(Value.Ingredient2Id));
         }
 
         protected bool Equals(CraftItemEntry other)

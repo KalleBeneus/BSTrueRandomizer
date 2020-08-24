@@ -66,7 +66,7 @@ namespace BSTrueRandomizer.model.random
                 .ElementAt(availableItemIndex);
 
             uniqueItem.ZeroOccurrence();
-            _availableItems[itemType].RemoveAt(availableItemIndex);
+            _availableItems[itemType].Remove(uniqueItem);
             AddNewItem(uniqueItem, _unavailableItems);
             return uniqueItem.ItemName;
         }

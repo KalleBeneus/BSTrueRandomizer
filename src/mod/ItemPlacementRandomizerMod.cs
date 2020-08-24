@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BSTrueRandomizer.model;
 using BSTrueRandomizer.model.composite;
@@ -60,18 +59,20 @@ namespace BSTrueRandomizer.mod
                 .ForEach(entry => storeToAddTo.AddItem(entry.Value.Item01, Constants.ItemTypeFood));
         }
 
-        private void AddAllCraftableItemsToRandomize(IEnumerable<IItemEntry> craftList, RandomizableStore storeToAddTo)
+        private void AddAllCraftableItemsToRandomize(IEnumerable<CraftItemEntry> craftList, RandomizableStore storeToAddTo)
         {
             craftList.Where(IsEntryRandomizableForCraftInput)
                 .ToList()
                 .ForEach(entry => storeToAddTo.AddCraftableItem(entry.GetItemName(), entry.GetItemType()));
         }
 
-        private bool IsEntryRandomizableForCraftInput(IItemEntry entry)
+        private bool IsEntryRandomizableForCraftInput(CraftItemEntry craftEntry)
         {
-            string itemType = entry.GetItemType();
+            string itemType = craftEntry.GetItemType();
 
-            return entry.IsEntryValid() &&
+            return craftEntry.IsEntryValid() &&
+                   !Constants.ItemName8BitCoin.Equals(craftEntry.Value.Ingredient1Id) &&
+                   !Constants.ItemName32BitCoin.Equals(craftEntry.Value.Ingredient2Id) &&
                    !"EItemType::CraftingMats".Equals(itemType) &&
                    !"EItemType::Key".Equals(itemType) &&
                    !"EItemType::Upgrade".Equals(itemType) &&
@@ -186,8 +187,8 @@ namespace BSTrueRandomizer.mod
 
             return craftEntry.IsEntryValid() &&
                    IsItemTypeRandomizableForCraftOutput(itemType) &&
-                   !"8bitcoin".Equals(craftEntry.Value.Ingredient1Id.ToLower()) &&
-                   !"32bitcoin".Equals(craftEntry.Value.Ingredient2Id.ToLower());
+                   !Constants.ItemName8BitCoin.Equals(craftEntry.Value.Ingredient1Id) &&
+                   !Constants.ItemName32BitCoin.Equals(craftEntry.Value.Ingredient2Id);
         }
 
         private bool IsItemTypeRandomizableForCraftOutput(string itemType)

@@ -22,7 +22,7 @@ namespace BSTrueRandomizer
             var gameFileReader = new GameFileService(opts.InputPath);
             GameFiles gameFiles = gameFileReader.ReadAllFiles();
 
-            Random random = CreateSeededRandom(opts);
+            Random random = CreateSeededRandom(opts.SeedText);
             var itemRandomizerService = new ItemRandomizerService(random);
             var randomizerService = new ItemPlacementRandomizerMod(itemRandomizerService);
             var typeRandomizerService = new DropTypeRandomizerMod(itemRandomizerService);
@@ -34,23 +34,22 @@ namespace BSTrueRandomizer
                 typeRandomizerService.RandomizeTypesWithLimitedFixedKeyLocations(gameFiles.DropList);
             }
 
-            GameFileService.WriteModifiedFiles(gameFiles, opts.OutputPath);
+            if (opts.IsJsonOutput || opts.IsJsonOnly)
+            {
+                GameFileService.WriteModifiedJsonFiles(gameFiles, opts.OutputPath);
+            }
+
+            if (!opts.IsJsonOnly)
+            {
+                string assetOutputFolder = opts.OutputPath + Constants.uassetPathBase + Constants.uassetPathSub;
+                GameFileService.WriteModifiedUassetFiles(gameFiles, assetOutputFolder);
+                GameFileService.CreatePakFile(opts);
+            }
         }
 
-        private static Random CreateSeededRandom(Options opts)
+        private static Random CreateSeededRandom(string seedText)
         {
-            Random random;
-            if (opts.SeedText == null)
-            {
-                random = new Random();
-            }
-            else
-            {
-                opts.Seed = SeedConverter.CalculateSeedNumberFromString(opts.SeedText);
-                random = new Random(opts.Seed);
-            }
-
-            return random;
+            return string.IsNullOrWhiteSpace(seedText) ? new Random() : new Random(SeedConverter.CalculateSeedNumberFromString(seedText));
         }
     }
 }

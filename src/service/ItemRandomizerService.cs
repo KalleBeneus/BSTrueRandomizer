@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using BSTrueRandomizer.Exceptions;
-using Microsoft.VisualBasic;
 
 namespace BSTrueRandomizer.service
 {
-    internal class ItemRandomizerService
+    public class ItemRandomizerService
     {
         private readonly Random _random;
 
@@ -45,14 +43,26 @@ namespace BSTrueRandomizer.service
 
         public IEnumerable<T> GetRandomEntriesFromList<T>(IList<T> sortTarget, int numberToTake)
         {
-            List<T> result = new List<T>();
-            int startIndex = sortTarget.Count - 1;
+            if (sortTarget.Count <= numberToTake)
+            {
+                return new List<T>(sortTarget);
+            }
+
+            if (numberToTake <= 0)
+            {
+                return new List<T>();
+            }
+
+            var listCopy = new List<T>(sortTarget);
+            var result = new List<T>(numberToTake);
+            int startIndex = listCopy.Count - 1;
             for (int i = startIndex; i > startIndex - numberToTake; i--)
             {
                 int swapIndex = _random.Next(i + 1);
-                result.Add(sortTarget[swapIndex]);
-                sortTarget[swapIndex] = sortTarget[i];
+                result.Add(listCopy[swapIndex]);
+                listCopy[swapIndex] = listCopy[i];
             }
+
             return result;
         }
     }

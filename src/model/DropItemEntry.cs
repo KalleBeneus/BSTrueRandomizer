@@ -21,6 +21,11 @@ namespace BSTrueRandomizer.model
 
         public string GetItemType()
         {
+            return Value.ItemType;
+        }
+
+        public string GetItemReferenceType()
+        {
             if (Value.ItemReferenceType == null)
             {
                 throw new IllegalStateException($"Item reference type has not been correctly set for {GetType().Name} with key '{Key}'");

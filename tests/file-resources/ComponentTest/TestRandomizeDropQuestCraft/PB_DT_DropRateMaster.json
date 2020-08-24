@@ -58,7 +58,7 @@
       "RareItemId": "None",
       "RareItemQuantity": 0,
       "RareItemRate": 0.0,
-      "CommonItemId": "unique_key_2",
+      "CommonItemId": "keyitem_weapon_1",
       "CommonItemQuantity": 1,
       "CommonRate": 100.0,
       "RareIngredientId": "None",

@@ -14,8 +14,12 @@ namespace BSTrueRandomizer
         public string OutputPath { get; set; } = "./";
 
         [Option('i', "input", Required = false, HelpText = "Input folder path where DropRate, Quest, Craft and Item master files are located")]
-        public string InputPath { get; set; } = Constants.DefaultInputFolderPath;
+        public string InputPath { get; set; }
 
-        public int Seed { get; set; }
+        [Option('j', "json-output", Required = false, HelpText = "Output modified json files into output folder.")]
+        public bool IsJsonOutput { get; set; }
+
+        [Option('J', "json-only", Required = false, HelpText = "Skip creation of .pak file. Only create and output modified json files.")]
+        public bool IsJsonOnly { get; set; }
     }
 }

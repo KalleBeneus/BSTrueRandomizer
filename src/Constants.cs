@@ -20,10 +20,24 @@
         
         public const string EntryInfoNone = "None";
 
-        public const string FileNameDropRateMaster = "PB_DT_DropRateMaster.json";
-        public const string FileNameQuestMaster = "PB_DT_QuestMaster.json";
-        public const string FileNameCraftMaster = "PB_DT_CraftMaster.json";
+        public const string FileNameDropRateMaster = "PB_DT_DropRateMaster";
+        public const string FileNameQuestMaster = "PB_DT_QuestMaster";
+        public const string FileNameCraftMaster = "PB_DT_CraftMaster";
+        public const string FileNameItemMaster = "PB_DT_ItemMaster";
+
+        public const string FileExtensionJson = ".json";
+        public const string FileExtensionUasset = ".uasset";
+        public const string FileExtensionBin = ".bin";
+        public const string FileExtensionPak = ".pak";
         
-        public const string DefaultInputFolderPath = "file-resources/";
+        public const string DefaultInputFolderPath = @"file-resources\";
+        public const string DefaultPakFileName = "BSTrueRandomizer";
+        
+        public const string uassetPathSub = @"BloodstainedRotN\Content\Core\DataTable\";
+        public const string uassetPathBase = @"PakContents\";
+
+        public const string ItemName8BitCoin = "8BitCoin";
+        public const string ItemName16BitCoin = "16BitCoin";
+        public const string ItemName32BitCoin = "32BitCoin";
     }
 }

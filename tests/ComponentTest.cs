@@ -12,16 +12,13 @@ namespace BSTrueRandomizerTest
     [TestClass]
     public class ComponentTest
     {
-
-        // TODO add test for food randomization
-
         private const string FolderPathOutput = "file-resources/ComponentTest/Output/";
         private Options _opts;
 
         [TestInitialize]
         public void Setup()
         {
-            _opts = new Options {OutputPath = FolderPathOutput};
+            _opts = new Options {OutputPath = FolderPathOutput, IsJsonOnly = true};
         }
 
         [TestMethod]
@@ -124,6 +121,25 @@ namespace BSTrueRandomizerTest
         }
 
         [TestMethod]
+        public void TestAllFoodItemsAreReplacedWithFoodNeededForQuests()
+        {
+            // Assign
+            _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
+            var gameFileReader = new GameFileService(_opts.InputPath);
+
+            // Act
+            Program.RunMain(_opts);
+            GameFiles outputFiles = gameFileReader.ReadAllFiles(FolderPathOutput);
+
+            //Assert
+            int assignedQuestFoodCount = CountItemsWithNamesContaining("quest_food", outputFiles.DropList);
+            assignedQuestFoodCount += CountItemsWithNamesContaining("quest_food", outputFiles.QuestList);
+            Assert.AreEqual(2, assignedQuestFoodCount);
+            int questFoodAssignedToCraftList = CountItemsWithNamesContaining("quest_food", outputFiles.CraftList);
+            Assert.AreEqual(0, questFoodAssignedToCraftList);
+        }
+
+        [TestMethod]
         public void TestResultListsEntryCountIsUnchanged()
         {
             // Assign
@@ -180,6 +196,9 @@ namespace BSTrueRandomizerTest
         [TestMethod]
         public void TestProvidingNoSeedGivesDifferentResultsOnMultipleRuns()
         {
+            // Assign
+            _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
+
             // Act
             Program.RunMain(_opts);
             string firstRunDropMasterString = File.ReadAllText(FolderPathOutput + "PB_DT_DropRateMaster.json");
@@ -201,6 +220,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.SeedText = "SeedText-FixedSeed";
+            _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
             var gameFileReader = new GameFileService(_opts.InputPath);
 
             // Act
@@ -225,6 +245,7 @@ namespace BSTrueRandomizerTest
             // Assign
             const string firstSeed = "SeedText-First";
             const string secondSeed = "SeedText-Second";
+            _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
             var gameFileReader = new GameFileService(_opts.InputPath);
 
             // Act
@@ -246,11 +267,81 @@ namespace BSTrueRandomizerTest
         }
 
         [TestMethod]
+        public void TestWeaponInKeyTypeChestIsNotMoved()
+        {
+            // Assign
+            const string keyWeaponId = "keyitem_weapon_1";
+            _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
+            var gameFileReader = new GameFileService(_opts.InputPath);
+
+            // Act
+            Program.RunMain(_opts);
+            GameFiles inputFiles = gameFileReader.ReadAllFiles(_opts.InputPath);
+            GameFiles outputFiles = gameFileReader.ReadAllFiles(FolderPathOutput);
+
+            //Assert
+            List<DropItemEntry> inputDroplist = inputFiles.DropList;
+            List<DropItemEntry> outputDroplist = outputFiles.DropList;
+            DropItemEntry originalKeyWeaponEntry = inputDroplist.Find(entry => keyWeaponId.Equals(entry.GetItemName()));
+            DropItemEntry newKeyWeaponEntry = outputDroplist.Find(entry => keyWeaponId.Equals(entry.GetItemName()));
+            Assert.AreEqual(originalKeyWeaponEntry, newKeyWeaponEntry);
+            Assert.AreEqual(inputDroplist.IndexOf(originalKeyWeaponEntry), outputDroplist.IndexOf(newKeyWeaponEntry));
+            Assert.AreEqual(0, CountItemsWithNamesContaining(keyWeaponId, outputFiles.QuestList));
+            Assert.AreEqual(0, CountItemsWithNamesContaining(keyWeaponId, outputFiles.CraftList));
+        }
+
+        [TestMethod]
+        public void TestOnlySecondUpgradeBackerWeaponsAreRandomizedByDefault()
+        {
+            // Assign
+            _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
+            var gameFileReader = new GameFileService(_opts.InputPath);
+            GameFiles inputFiles = gameFileReader.ReadAllFiles(_opts.InputPath);
+            List<string> firstAndLastBackerWeapons = inputFiles.CraftList
+                .Where(entry => entry.IsBackerWeapon() && !Constants.ItemName16BitCoin.Equals(entry.Value.Ingredient2Id))
+                .Select(entry => entry.GetItemName())
+                .ToList();
+
+            // Act
+            Program.RunMain(_opts);
+
+            //Assert
+            GameFiles outputFiles = gameFileReader.ReadAllFiles(FolderPathOutput);
+            int numberAssignedFirstAndLastBackerWeapons = outputFiles.DropList
+                .FindAll(entry => firstAndLastBackerWeapons.Contains(entry.GetItemName()))
+                .Count;
+            Assert.AreEqual(0, numberAssignedFirstAndLastBackerWeapons);
+            numberAssignedFirstAndLastBackerWeapons = outputFiles.QuestList
+                .FindAll(entry => firstAndLastBackerWeapons.Contains(entry.GetItemName()))
+                .Count;
+            Assert.AreEqual(0, numberAssignedFirstAndLastBackerWeapons);
+        }
+
+        [TestMethod]
+        public void TestCraftListContainsNoDuplicates()
+        {
+            // Assign
+            _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
+            var gameFileReader = new GameFileService(_opts.InputPath);
+
+            // Act
+            Program.RunMain(_opts);
+
+            //Assert
+            List<CraftItemEntry> resultCraftList = gameFileReader.ReadAllFiles(FolderPathOutput).CraftList;
+            List<string> craftItemNames = resultCraftList.Where(entry => entry.IsEntryValid() && !Constants.EntryInfoNone.Equals(entry.GetItemName()))
+                .Select(entry => entry.GetItemName())
+                .ToList();
+            HashSet<string> craftItemNameSet = craftItemNames.ToHashSet();
+            Assert.AreEqual(craftItemNames.Count, craftItemNameSet.Count);
+        }
+
+        [TestMethod]
         public void TestSingleInstanceConsumablesCanBeAssignedMultipleTimes()
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestConsumablesOnly\";
-            _opts.SeedText = "SeedText-SingleInstanceConsumableFindableTwice";
+            _opts.SeedText = "SeedText-SingleInstanceConsumableExistsInMultiples";
             var gameFileReader = new GameFileService(_opts.InputPath);
 
             // Act
@@ -278,7 +369,7 @@ namespace BSTrueRandomizerTest
 
             //Assert
             int countUniqueConsumables = CountAllItemsWithNamesContaining("unique_consumable", outputFiles);
-            Assert.AreEqual(0, countUniqueConsumables); 
+            Assert.AreEqual(0, countUniqueConsumables);
         }
 
         private int CountAllItemsWithNamesContaining(string itemNamePart, GameFiles outputFiles)
@@ -311,14 +402,18 @@ namespace BSTrueRandomizerTest
                     IItemEntry outputEntry = outputItemList[i];
                     if (outputEntry is CraftItemEntry && Constants.EntryInfoNone.Equals(outputEntry.GetItemName()))
                     {
-                        int nextNewItemIndex = inputItemList.Count + numberOfAddedEntriesFound;
-                        outputEntry = outputItemList[nextNewItemIndex];
+                        int replacementItemIndex = inputItemList.Count + numberOfAddedEntriesFound;
+                        outputEntry = outputItemList[replacementItemIndex];
                         numberOfAddedEntriesFound++;
                         Assert.AreEqual(inputEntry.GetItemType(), outputEntry.GetItemType());
                     }
+                    else if (outputEntry is DropItemEntry outputDropEntry && inputEntry is DropItemEntry inputDropEntry)
+                    {
+                        Assert.AreEqual(inputDropEntry.GetItemReferenceType(), outputDropEntry.GetItemReferenceType());
+                    }
                     else
                     {
-                        Assert.AreEqual(inputEntry.GetItemType(), inputEntry.GetItemType());
+                        Assert.AreEqual(inputEntry.GetItemType(), outputEntry.GetItemType());
                     }
                 }
             }
@@ -334,6 +429,5 @@ namespace BSTrueRandomizerTest
                 }
             }
         }
-
     }
 }

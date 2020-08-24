@@ -2,7 +2,7 @@
 
 namespace BSTrueRandomizer.Exceptions
 {
-    internal class RandomizationException : Exception
+    public class RandomizationException : RandomizerBaseException
     {
         public RandomizationException(string message) : base(message)
         {

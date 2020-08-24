@@ -504,6 +504,153 @@
     }
   },
   {
+    "Key": "keyitem_weapon_1",
+    "Value": {
+      "IconPath": "271",
+      "ItemType": "ECarriedCatalog::Weapon",
+      "NameStrKey": "ITEM_NAME_Bronze",
+      "DescriptionStrKey": "ITEM_EXPLAIN_Bronze",
+      "max": 99,
+      "buyPrice": 338,
+      "sellPrice": 33,
+      "Producted": "Event_01_001_0000",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "backer_weapon1_1",
+    "Value": {
+      "IconPath": "271",
+      "ItemType": "ECarriedCatalog::Weapon",
+      "NameStrKey": "ITEM_NAME_Bronze",
+      "DescriptionStrKey": "ITEM_EXPLAIN_Bronze",
+      "max": 99,
+      "buyPrice": 338,
+      "sellPrice": 33,
+      "Producted": "Event_01_001_0000",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "backer_weapon1_2",
+    "Value": {
+      "IconPath": "271",
+      "ItemType": "ECarriedCatalog::Weapon",
+      "NameStrKey": "ITEM_NAME_Bronze",
+      "DescriptionStrKey": "ITEM_EXPLAIN_Bronze",
+      "max": 99,
+      "buyPrice": 338,
+      "sellPrice": 33,
+      "Producted": "Event_01_001_0000",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "backer_weapon1_3",
+    "Value": {
+      "IconPath": "271",
+      "ItemType": "ECarriedCatalog::Weapon",
+      "NameStrKey": "ITEM_NAME_Bronze",
+      "DescriptionStrKey": "ITEM_EXPLAIN_Bronze",
+      "max": 99,
+      "buyPrice": 338,
+      "sellPrice": 33,
+      "Producted": "Event_01_001_0000",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "backer_weapon2_1",
+    "Value": {
+      "IconPath": "271",
+      "ItemType": "ECarriedCatalog::Weapon",
+      "NameStrKey": "ITEM_NAME_Bronze",
+      "DescriptionStrKey": "ITEM_EXPLAIN_Bronze",
+      "max": 99,
+      "buyPrice": 338,
+      "sellPrice": 33,
+      "Producted": "Event_01_001_0000",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "backer_weapon2_2",
+    "Value": {
+      "IconPath": "271",
+      "ItemType": "ECarriedCatalog::Weapon",
+      "NameStrKey": "ITEM_NAME_Bronze",
+      "DescriptionStrKey": "ITEM_EXPLAIN_Bronze",
+      "max": 99,
+      "buyPrice": 338,
+      "sellPrice": 33,
+      "Producted": "Event_01_001_0000",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
+    "Key": "backer_weapon2_3",
+    "Value": {
+      "IconPath": "271",
+      "ItemType": "ECarriedCatalog::Weapon",
+      "NameStrKey": "ITEM_NAME_Bronze",
+      "DescriptionStrKey": "ITEM_EXPLAIN_Bronze",
+      "max": 99,
+      "buyPrice": 338,
+      "sellPrice": 33,
+      "Producted": "Event_01_001_0000",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
     "Key": "unique_consumable_1",
     "Value": {
       "IconPath": "272",

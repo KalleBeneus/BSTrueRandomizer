@@ -2,12 +2,12 @@
 {
     public interface IItemEntry
     {
-        public string GetItemName();
+        string GetItemName();
 
-        public string GetItemType();
+        string GetItemType();
 
-        public void UpdateItemType(string itemType);
+        void UpdateItemType(string itemType);
 
-        public bool IsEntryValid();
+        bool IsEntryValid();
     }
 }
