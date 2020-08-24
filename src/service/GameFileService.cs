@@ -31,7 +31,7 @@ namespace BSTrueRandomizer.service
         public GameFiles ReadAllFiles(string folderPath = "")
         {
             string path = string.IsNullOrWhiteSpace(folderPath) ? _inputFolderPath : FileUtil.AddFolderSeparatorIfMissing(folderPath);
-            
+
             string dropMasterString = ReadGameFileText(path, Constants.FileNameDropRateMaster);
             var dropList = JsonConvert.DeserializeObject<List<DropItemEntry>>(dropMasterString);
             string questMasterString = ReadGameFileText(path, Constants.FileNameQuestMaster);
@@ -49,7 +49,7 @@ namespace BSTrueRandomizer.service
         private string ReadGameFileText(string userProvidedPath, string fileName)
         {
             string jsonFileName = FileUtil.GetJsonFileName(fileName);
-            string defaultFilePath = Constants.DefaultInputFolderPath + jsonFileName;
+            string defaultFilePath = Path.Combine(Constants.DefaultInputFolderPath, jsonFileName);
             if (!string.IsNullOrWhiteSpace(userProvidedPath))
             {
                 return TryReadFileContents(userProvidedPath, jsonFileName);
@@ -60,10 +60,11 @@ namespace BSTrueRandomizer.service
 
         private string TryReadFileContents(string path, string jsonFileName)
         {
-            string filePath = path + jsonFileName;
+            string filePath = Path.Combine(path, jsonFileName);
             if (!File.Exists(filePath))
             {
-                throw new InputException($"'{jsonFileName}' file could not be found in input folder '{path}'. Add the file or specify another folder with -input <folder path>");
+                throw new InputException(
+                    $"'{jsonFileName}' file could not be found in input folder '{path}'. Add the file or specify another folder with -input <folder path>");
             }
 
             return File.ReadAllText(filePath);
@@ -89,7 +90,7 @@ namespace BSTrueRandomizer.service
         private static void WriteModifiedJsonFile(IEnumerable<IItemEntry> modifiedData, string fileName, string outputFolderPath)
         {
             string jsonOutput = JsonConvert.SerializeObject(modifiedData);
-            File.WriteAllText(outputFolderPath + FileUtil.GetJsonFileName(fileName), jsonOutput, Encoding.UTF8);
+            File.WriteAllText(Path.Combine(outputFolderPath, FileUtil.GetJsonFileName(fileName)), jsonOutput, Encoding.UTF8);
         }
 
         public static void WriteModifiedUassetFiles(GameFiles gameFiles, string outputFolder)
@@ -111,21 +112,27 @@ namespace BSTrueRandomizer.service
             Directory.CreateDirectory(outputFolder);
 
             asset.UpdateFromJSON(modifiedJson);
-            asset.SerializeToBinary(outputFolder + fileName);
-            File.Move(outputFolder + FileUtil.GetBinFileName(fileName), outputFolder + FileUtil.GetUassetFileName(fileName), true);
+            asset.SerializeToBinary(Path.Combine(outputFolder, fileName));
+
+            string uassetFilePath = Path.Combine(outputFolder, FileUtil.GetUassetFileName(fileName));
+            string binFilePath = Path.Combine(outputFolder, FileUtil.GetBinFileName(fileName));
+            File.Move(binFilePath, uassetFilePath, true);
         }
 
         public static void CreatePakFile(Options opts)
         {
-            string fileListPath = opts.OutputPath + "filelist.txt";
-            File.WriteAllText(fileListPath, $"\"{opts.OutputPath}PakContents\\*.*\" \"..\\..\\..\\*.*\"");
+            string fileListPath = Path.Combine(opts.OutputPath, "filelist.txt");
+            string uassetBasePath = Path.Combine(opts.OutputPath, Constants.uassetPathBase);
+            File.WriteAllText(fileListPath, $"\"{uassetBasePath}*.*\" \"..\\..\\..\\*.*\"");
 
             string pakFileName = string.IsNullOrWhiteSpace(opts.SeedText) ? Constants.DefaultPakFileName : opts.SeedText;
             pakFileName = Path.ChangeExtension(pakFileName, Constants.FileExtensionPak);
+            string pakFilePath = Path.Combine(opts.OutputPath, pakFileName);
+
             using var pProcess = new Process();
 
             pProcess.StartInfo.FileName = @"resources\UnrealPak.exe";
-            pProcess.StartInfo.Arguments = $"{opts.OutputPath + pakFileName} -create={fileListPath}";
+            pProcess.StartInfo.Arguments = $"\"{pakFilePath}\" -create=\"{fileListPath}\"";
             pProcess.StartInfo.RedirectStandardOutput = true;
             pProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             pProcess.StartInfo.CreateNoWindow = true;
@@ -133,7 +140,7 @@ namespace BSTrueRandomizer.service
             Console.WriteLine(pProcess.StandardOutput.ReadToEnd());
             pProcess.WaitForExit();
 
-            Directory.Delete(opts.OutputPath + Constants.uassetPathBase, true);
+            Directory.Delete(uassetBasePath, true);
             File.Delete(fileListPath);
         }
     }

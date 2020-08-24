@@ -43,7 +43,7 @@ namespace BSTrueRandomizer.util
 
         public static string GetJsonFilePath(string path, string fileName)
         {
-            return AddFolderSeparatorIfMissing(path) + fileName + Constants.FileExtensionJson;
+            return Path.Combine(path, fileName, Constants.FileExtensionJson);
         }
 
         public static string GetJsonFileName(string fileName)

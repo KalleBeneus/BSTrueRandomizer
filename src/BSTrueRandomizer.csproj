@@ -36,30 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="file-resources\PB_DT_CraftMaster.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="file-resources\PB_DT_CraftMaster.uasset">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="file-resources\PB_DT_DropRateMaster.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="file-resources\PB_DT_DropRateMaster.uasset">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="file-resources\PB_DT_ItemMaster.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="file-resources\PB_DT_ItemMaster.uasset">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="file-resources\PB_DT_QuestMaster.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="file-resources\PB_DT_QuestMaster.uasset">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="resources\UnrealPak.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

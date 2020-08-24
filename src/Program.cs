@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using BSTrueRandomizer.mod;
 using BSTrueRandomizer.model.composite;
 using BSTrueRandomizer.service;
@@ -41,7 +42,7 @@ namespace BSTrueRandomizer
 
             if (!opts.IsJsonOnly)
             {
-                string assetOutputFolder = opts.OutputPath + Constants.uassetPathBase + Constants.uassetPathSub;
+                string assetOutputFolder = Path.Combine(opts.OutputPath, Constants.uassetPathBase, Constants.uassetPathSub);
                 GameFileService.WriteModifiedUassetFiles(gameFiles, assetOutputFolder);
                 GameFileService.CreatePakFile(opts);
             }
