@@ -2,7 +2,6 @@
 {
     public class Constants
     {
-        public const string ItemTypeOther = "EItemType::Weapon";
         public const string ItemTypeKey = "EItemType::Key";
         public const string ItemTypeNone = "EItemType::None";
         public const string ItemTypeConsumable = "EItemType::Consumable";
@@ -17,6 +16,7 @@
         public const string ItemTypeCoin = "EItemType::Coin";
         public const string ItemTypeUpgrade = "EItemType::Upgrade";
         public const string ItemTypeRecipe = "EItemType::Recipe";
+        public const string ItemTypeUniqueCraft = "EItemType::UniqueCraft";
         
         public const string EntryInfoNone = "None";
 
@@ -33,11 +33,14 @@
         public const string DefaultInputFolderPath = @"file-resources\";
         public const string DefaultPakFileName = "BSTrueRandomizer";
         
-        public const string uassetPathSub = @"BloodstainedRotN\Content\Core\DataTable\";
-        public const string uassetPathBase = @"PakContents\";
+        public const string UassetPathSub = @"BloodstainedRotN\Content\Core\DataTable\";
+        public const string UassetPathBase = @"PakContents\";
 
         public const string ItemName8BitCoin = "8BitCoin";
         public const string ItemName16BitCoin = "16BitCoin";
         public const string ItemName32BitCoin = "32BitCoin";
+        
+        public const string QuestGiverBenjamin = "benjamin";
+        public const string QuestGiverSusie = "susie";
     }
 }

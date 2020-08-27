@@ -36,12 +36,12 @@ namespace BSTrueRandomizer.model
 
         public bool IsEntryValid()
         {
-            return !"benjamin".Equals(Value.ClientId.ToLower());
+            return !Constants.QuestGiverBenjamin.Equals(Value.ClientId.ToLower()) && !Constants.ItemTypeNone.Equals(GetItemType());
         }
 
         public bool IsGourmandQuest()
         {
-            return "susie".Equals(Value.ClientId.ToLower());
+            return Constants.QuestGiverSusie.Equals(Value.ClientId.ToLower());
         }
 
         protected bool Equals(QuestItemEntry other)

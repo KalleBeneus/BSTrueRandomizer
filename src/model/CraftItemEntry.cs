@@ -36,7 +36,7 @@ namespace BSTrueRandomizer.model
 
         public bool IsEntryValid()
         {
-            return "ECraftType::Craft".Equals(Value.Type);
+            return "ECraftType::Craft".Equals(Value.Type) && !Constants.ItemTypeNone.Equals(GetItemType());
         }
 
         public bool IsBackerWeapon()

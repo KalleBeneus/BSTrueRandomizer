@@ -122,7 +122,7 @@ namespace BSTrueRandomizer.service
         public static void CreatePakFile(Options opts)
         {
             string fileListPath = Path.Combine(opts.OutputPath, "filelist.txt");
-            string uassetBasePath = Path.Combine(opts.OutputPath, Constants.uassetPathBase);
+            string uassetBasePath = Path.Combine(opts.OutputPath, Constants.UassetPathBase);
             File.WriteAllText(fileListPath, $"\"{uassetBasePath}*.*\" \"..\\..\\..\\*.*\"");
 
             string pakFileName = string.IsNullOrWhiteSpace(opts.SeedText) ? Constants.DefaultPakFileName : opts.SeedText;

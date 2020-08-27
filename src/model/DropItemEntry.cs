@@ -40,7 +40,7 @@ namespace BSTrueRandomizer.model
 
         public bool IsEntryValid()
         {
-            return !Key.ToLower().EndsWith("_shard") && !Constants.ItemTypeNone.Equals(Value.ItemType);
+            return !Key.ToLower().EndsWith("_shard") && !Constants.ItemTypeNone.Equals(GetItemType());
         }
 
         public bool IsEntryBreakableWall()

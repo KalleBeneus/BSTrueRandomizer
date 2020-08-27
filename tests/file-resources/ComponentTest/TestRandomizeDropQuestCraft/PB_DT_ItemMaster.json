@@ -714,6 +714,27 @@
     }
   },
   {
+    "Key": "unique_scarf_1",
+    "Value": {
+      "IconPath": "275",
+      "ItemType": "ECarriedCatalog::Muffler",
+      "NameStrKey": "ITEM_NAME_Steel",
+      "DescriptionStrKey": "ITEM_EXPLAIN_Steel",
+      "max": 99,
+      "buyPrice": 2400,
+      "sellPrice": 240,
+      "Producted": "None",
+      "CarryToBossRushMode": false,
+      "ActorTypeID": "EPBItemGetType::None",
+      "IsForBackersOnly": false,
+      "NotInheritable": false,
+      "NotListedInArchive": false,
+      "NotCountAsCompleteness": false,
+      "SECategories": [],
+      "SEAugment": []
+    }
+  },
+  {
     "Key": "unique_head_1",
     "Value": {
       "IconPath": "257",

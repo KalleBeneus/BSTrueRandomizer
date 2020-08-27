@@ -41,7 +41,7 @@ namespace BSTrueRandomizer.service
             return openSlotIndexes;
         }
 
-        public IEnumerable<T> GetRandomEntriesFromList<T>(IList<T> sortTarget, int numberToTake)
+        public ICollection<T> GetRandomEntriesFromList<T>(IList<T> sortTarget, int numberToTake)
         {
             if (sortTarget.Count <= numberToTake)
             {

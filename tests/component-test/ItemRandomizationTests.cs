@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BSTrueRandomizerTest
 {
     [TestClass]
-    public class ComponentTest
+    public class ItemRandomizationTests
     {
         private const string FolderPathOutput = "file-resources/ComponentTest/Output/";
         private Options _opts;

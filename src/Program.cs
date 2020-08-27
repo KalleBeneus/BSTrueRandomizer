@@ -28,11 +28,12 @@ namespace BSTrueRandomizer
             var randomizerService = new ItemPlacementRandomizerMod(itemRandomizerService);
             var typeRandomizerService = new DropTypeRandomizerMod(itemRandomizerService);
 
-
             randomizerService.RandomizeItems(gameFiles);
+
             if (opts.IsRandomizeType)
             {
-                typeRandomizerService.RandomizeTypesWithLimitedFixedKeyLocations(gameFiles.DropList);
+                typeRandomizerService.SetAllItemLocationsToSameType(gameFiles.DropList);
+                typeRandomizerService.SetRandomKeyItemLocations(gameFiles.DropList);
             }
 
             if (opts.IsJsonOutput || opts.IsJsonOnly)
@@ -42,7 +43,7 @@ namespace BSTrueRandomizer
 
             if (!opts.IsJsonOnly)
             {
-                string assetOutputFolder = Path.Combine(opts.OutputPath, Constants.uassetPathBase, Constants.uassetPathSub);
+                string assetOutputFolder = Path.Combine(opts.OutputPath, Constants.UassetPathBase, Constants.UassetPathSub);
                 GameFileService.WriteModifiedUassetFiles(gameFiles, assetOutputFolder);
                 GameFileService.CreatePakFile(opts);
             }

@@ -20,8 +20,8 @@ namespace BSTrueRandomizer.mod
         {
             var randomizableItemStore = new RandomizableStore();
 
-            AddAllItemsToRandomize(gameFilesToModify.DropList, randomizableItemStore);
-            AddAllItemsToRandomize(gameFilesToModify.QuestList, randomizableItemStore);
+            AddAllRandomizableItems(gameFilesToModify.DropList, randomizableItemStore);
+            AddAllRandomizableItems(gameFilesToModify.QuestList, randomizableItemStore);
             AddAllGourmandQuestFoods(gameFilesToModify.QuestList, randomizableItemStore);
             AddAllCraftableItemsToRandomize(gameFilesToModify.CraftList, randomizableItemStore);
 
@@ -30,7 +30,7 @@ namespace BSTrueRandomizer.mod
             RandomizeCraftItems(gameFilesToModify.CraftList, randomizableItemStore);
         }
 
-        private void AddAllItemsToRandomize(IEnumerable<IItemEntry> itemList, RandomizableStore storeToAddTo)
+        private void AddAllRandomizableItems(IEnumerable<IItemEntry> itemList, RandomizableStore storeToAddTo)
         {
             itemList.Where(IsEntryRandomizableForInput)
                 .ToList()
@@ -42,14 +42,13 @@ namespace BSTrueRandomizer.mod
             string itemType = entry.GetItemType();
 
             return entry.IsEntryValid() &&
-                   !"EItemType::CraftingMats".Equals(itemType) &&
-                   !"EItemType::Key".Equals(itemType) &&
-                   !"EItemType::Upgrade".Equals(itemType) &&
-                   !"EItemType::None".Equals(itemType) &&
-                   !"EItemType::Coin".Equals(itemType) &&
-                   !"EItemType::Recipe".Equals(itemType) &&
-                   !"EItemType::Food".Equals(itemType) &&
-                   !"EItemType::Consumable".Equals(itemType);
+                   !Constants.ItemTypeCraftingMaterials.Equals(itemType) &&
+                   !Constants.ItemTypeKey.Equals(itemType) &&
+                   !Constants.ItemTypeUpgrade.Equals(itemType) &&
+                   !Constants.ItemTypeCoin.Equals(itemType) &&
+                   !Constants.ItemTypeRecipe.Equals(itemType) &&
+                   !Constants.ItemTypeFood.Equals(itemType) &&
+                   !Constants.ItemTypeConsumable.Equals(itemType);
         }
 
         private static void AddAllGourmandQuestFoods(List<QuestItemEntry> questList, RandomizableStore storeToAddTo)
@@ -73,13 +72,8 @@ namespace BSTrueRandomizer.mod
             return craftEntry.IsEntryValid() &&
                    !Constants.ItemName8BitCoin.Equals(craftEntry.Value.Ingredient1Id) &&
                    !Constants.ItemName32BitCoin.Equals(craftEntry.Value.Ingredient2Id) &&
-                   !"EItemType::CraftingMats".Equals(itemType) &&
-                   !"EItemType::Key".Equals(itemType) &&
-                   !"EItemType::Upgrade".Equals(itemType) &&
-                   !"EItemType::None".Equals(itemType) &&
-                   !"EItemType::Coin".Equals(itemType) &&
-                   !"EItemType::Food".Equals(itemType) &&
-                   !"EItemType::Recipe".Equals(itemType);
+                   !Constants.ItemTypeCraftingMaterials.Equals(itemType) &&
+                   !Constants.ItemTypeFood.Equals(itemType);
         }
 
         private void RandomizeDropItems(List<DropItemEntry> dropList, RandomizableStore availableItems)
@@ -99,12 +93,11 @@ namespace BSTrueRandomizer.mod
             string itemType = entry.GetItemType();
 
             return entry.IsEntryValid() &&
-                   !"EItemType::CraftingMats".Equals(itemType) &&
-                   !"EItemType::Key".Equals(itemType) &&
-                   !"EItemType::Upgrade".Equals(itemType) &&
-                   !"EItemType::None".Equals(itemType) &&
-                   !"EItemType::Coin".Equals(itemType) &&
-                   !"EItemType::Recipe".Equals(itemType);
+                   !Constants.ItemTypeCraftingMaterials.Equals(itemType) &&
+                   !Constants.ItemTypeKey.Equals(itemType) &&
+                   !Constants.ItemTypeUpgrade.Equals(itemType) &&
+                   !Constants.ItemTypeCoin.Equals(itemType) &&
+                   !Constants.ItemTypeRecipe.Equals(itemType);
         }
 
         private string GetRandomItem(RandomizableStore availableItems, string itemType)
@@ -151,7 +144,7 @@ namespace BSTrueRandomizer.mod
 
         private void RandomizeCraftItems(List<CraftItemEntry> craftList, RandomizableStore availableItems)
         {
-            Dictionary<string, IEnumerable<string>> itemsToReplaceByType = FindAllItemsToReplace(availableItems);
+            Dictionary<string, ICollection<string>> itemsToReplaceByType = FindAllItemsToReplace(availableItems);
             var newCraftEntries = new List<CraftItemEntry>();
 
             foreach (CraftItemEntry entry in craftList.Where(IsCraftEntryRandomizableForOutput))
@@ -167,9 +160,9 @@ namespace BSTrueRandomizer.mod
             craftList.AddRange(newCraftEntries);
         }
 
-        private Dictionary<string, IEnumerable<string>> FindAllItemsToReplace(RandomizableStore availableItems)
+        private Dictionary<string, ICollection<string>> FindAllItemsToReplace(RandomizableStore availableItems)
         {
-            var itemsToReplaceDict = new Dictionary<string, IEnumerable<string>>();
+            var itemsToReplaceDict = new Dictionary<string, ICollection<string>>();
 
             foreach (string itemType in availableItems.AvailableItemTypes().Where(IsItemTypeRandomizableForCraftOutput))
             {
@@ -193,14 +186,9 @@ namespace BSTrueRandomizer.mod
 
         private bool IsItemTypeRandomizableForCraftOutput(string itemType)
         {
-            return !"EItemType::CraftingMats".Equals(itemType) &&
-                   !"EItemType::Key".Equals(itemType) &&
-                   !"EItemType::Upgrade".Equals(itemType) &&
-                   !"EItemType::None".Equals(itemType) &&
-                   !"EItemType::Coin".Equals(itemType) &&
-                   !"EItemType::Consumable".Equals(itemType) &&
-                   !"EItemType::Food".Equals(itemType) &&
-                   !"EItemType::Recipe".Equals(itemType);
+            return !Constants.ItemTypeCraftingMaterials.Equals(itemType) &&
+                   !Constants.ItemTypeConsumable.Equals(itemType) &&
+                   !Constants.ItemTypeFood.Equals(itemType);
         }
 
         private string GetRandomNonCraftableItemName(RandomizableStore availableItems, string itemType)

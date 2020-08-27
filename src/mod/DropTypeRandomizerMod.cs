@@ -5,18 +5,24 @@ using BSTrueRandomizer.service;
 
 namespace BSTrueRandomizer.mod
 {
+    /**
+     * This class enables changing the item type of chests and breakables. These changes will only be reflected in the game when playing
+     * on randomizer setting 'Item: Retain Type'. All chests with the same type value will then be shuffled between themselves.
+     */
     internal class DropTypeRandomizerMod
     {
+        private const string ItemTypeNonKey = Constants.ItemTypeWeapon;
+
         private readonly Dictionary<string, string> _fixedKeyLocations = new Dictionary<string, string>
         {
-            {"VillageKeyBox", "EItemType::Key"},
-            {"PhotoEvent", "EItemType::Key"},
-            {"CertificationboardEvent", "EItemType::Key"},
-            {"Swordsman", "EItemType::Key"},
-            {"Treasurebox_SAN024", "EItemType::Weapon"},
-            {"Treasurebox_TWR019", "EItemType::Key"},
-            {"Treasurebox_KNG021", "EItemType::UniqueCraft"},
-            {"Treasurebox_ARC006", "EItemType::Accessory"}
+            {"VillageKeyBox", Constants.ItemTypeKey},
+            {"PhotoEvent", Constants.ItemTypeKey},
+            {"CertificationboardEvent", Constants.ItemTypeKey},
+            {"Swordsman", Constants.ItemTypeKey},
+            {"Treasurebox_SAN024", Constants.ItemTypeWeapon},
+            {"Treasurebox_TWR019", Constants.ItemTypeKey},
+            {"Treasurebox_KNG021", Constants.ItemTypeUniqueCraft},
+            {"Treasurebox_ARC006", Constants.ItemTypeAccessory}
         };
 
         private readonly ItemRandomizerService _randomizerService;
@@ -26,68 +32,55 @@ namespace BSTrueRandomizer.mod
             _randomizerService = randomizerService;
         }
 
-        public void RandomizeTypesWithLimitedFixedKeyLocations(List<DropItemEntry> ItemListToModify)
+        public void SetAllItemLocationsToSameType(List<DropItemEntry> gameDataToModify)
         {
-            int numberOfRandomKeyLocations = 15;
-            int numberOfRandomizableEntries = CalculateNumberOfPossibleKeyItemSlots(ItemListToModify);
-            ICollection<int> randomKeyEntryIndexes = _randomizerService.GetRandomOpenSlotIndexes(numberOfRandomizableEntries, numberOfRandomKeyLocations);
-
-            RandomizeKeyItemEntries(randomKeyEntryIndexes, ItemListToModify);
-        }
-
-
-        private int CalculateNumberOfPossibleKeyItemSlots(List<DropItemEntry> dropList)
-        {
-            int numberOfRandomizableEntries = 0;
-            foreach (DropItemEntry itemEntry in dropList)
+            foreach (DropItemEntry entry in gameDataToModify.Where(IsEntryRandomizable))
             {
-                if (itemEntry.IsEntryValid() && !itemEntry.IsEntryBreakableWall() && IsItemTypeRandomizable(itemEntry.Value.ItemType))
-                {
-                    numberOfRandomizableEntries++;
-                }
+                entry.Value.ItemType = ItemTypeNonKey;
             }
-
-            numberOfRandomizableEntries -= _fixedKeyLocations.Count;
-            return numberOfRandomizableEntries;
         }
 
-        private bool IsItemTypeRandomizable(string itemType)
+        private bool IsEntryRandomizable(DropItemEntry entry)
         {
-            if ("EItemType::CraftingMats".Equals(itemType)
-                || "EItemType::Consumable".Equals(itemType)
-                || "EItemType::None".Equals(itemType))
-            {
-                return false;
-            }
-
-            return true;
+            // Due to mistakes in the original game files, these types should never be changed
+            string itemType = entry.GetItemType();
+            return entry.IsEntryValid()
+                   && !Constants.ItemTypeCraftingMaterials.Equals(itemType)
+                   && !Constants.ItemTypeConsumable.Equals(itemType)
+                   && !Constants.ItemTypeNone.Equals(itemType);
         }
 
-        private void RandomizeKeyItemEntries(ICollection<int> randomKeyEntryIndexes, List<DropItemEntry> dropList)
+        /**
+         * Select a number of random chests to be potential key item locations. Chests that are found by defeating certain bosses are fixed
+         * key item locations. For the player, this effectively makes key items be findable anywhere in the game, but chests protected by
+         * bosses will have a higher chance of containing a key item. Key items will never be found in breakable walls.
+         */
+        public void SetRandomKeyItemLocations(List<DropItemEntry> gameDataToModify)
         {
-            int currentValidRandomizationEntryIndex = 0;
-            foreach (DropItemEntry itemEntry in dropList)
+            const int numberOfRandomKeyLocations = 15; // TODO turn into option
+            List<DropItemEntry> randomizableEntries = gameDataToModify.Where(IsKeyItemLocationCandidate).ToList();
+            ICollection<DropItemEntry> entriesToSetAsKey = _randomizerService.GetRandomEntriesFromList(randomizableEntries, numberOfRandomKeyLocations);
+
+            SetKeyTypeForRandomAndFixedLocations(gameDataToModify, entriesToSetAsKey);
+        }
+
+        private bool IsKeyItemLocationCandidate(DropItemEntry entry)
+        {
+            return IsEntryRandomizable(entry) && !entry.IsEntryBreakableWall() && !IsFixedKeyItemLocation(entry);
+        }
+
+        private bool IsFixedKeyItemLocation(DropItemEntry itemEntry)
+        {
+            return _fixedKeyLocations.ContainsKey(itemEntry.Key) && itemEntry.GetItemType().Equals(_fixedKeyLocations[itemEntry.Key]);
+        }
+
+        private void SetKeyTypeForRandomAndFixedLocations(IEnumerable<DropItemEntry> gameDataToModify, ICollection<DropItemEntry> entriesToSetAsKey)
+        {
+            foreach (DropItemEntry entry in gameDataToModify)
             {
-                if (itemEntry.IsEntryValid() && IsItemTypeRandomizable(itemEntry.Value.ItemType))
+                if (IsFixedKeyItemLocation(entry) || entriesToSetAsKey.Contains(entry))
                 {
-                    if (_fixedKeyLocations.ContainsKey(itemEntry.Key) && itemEntry.Value.ItemType.Equals(_fixedKeyLocations[itemEntry.Key]))
-                    {
-                        itemEntry.Value.ItemType = Constants.ItemTypeKey;
-                    }
-                    else
-                    {
-                        if (randomKeyEntryIndexes.Count > 0 && randomKeyEntryIndexes.First() == currentValidRandomizationEntryIndex)
-                        {
-                            itemEntry.Value.ItemType = Constants.ItemTypeKey;
-                            randomKeyEntryIndexes.Remove(currentValidRandomizationEntryIndex);
-                        }
-                        else
-                        {
-                            itemEntry.Value.ItemType = Constants.ItemTypeOther;
-                        }
-
-                        currentValidRandomizationEntryIndex++;
-                    }
+                    entry.Value.ItemType = Constants.ItemTypeKey;
                 }
             }
         }
