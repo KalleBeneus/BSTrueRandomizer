@@ -94,7 +94,7 @@ namespace BSTrueRandomizerTest
             //Assert
             List<DropItemEntry> outputDropList = gameFileReader.ReadAllFiles(FolderPathOutput).DropList;
 
-            int numberOfValidTypesNames = outputDropList.Where(entry => entry.IsEntryValid()).Distinct()
+            int numberOfValidTypesNames = outputDropList.Where(entry => entry.IsEntryValid())
                 .Select(entry => entry.GetItemType())
                 .Distinct()
                 .Count();
