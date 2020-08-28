@@ -2,6 +2,8 @@
 {
     public interface IItemEntry
     {
+        string Key { get; }
+
         string GetItemName();
 
         string GetItemType();

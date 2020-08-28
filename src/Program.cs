@@ -26,7 +26,7 @@ namespace BSTrueRandomizer
             Random random = CreateSeededRandom(opts.SeedText);
             var itemRandomizerService = new ItemRandomizerService(random);
             var randomizerService = new ItemPlacementRandomizerMod(itemRandomizerService);
-            var typeRandomizerService = new DropTypeRandomizerMod(itemRandomizerService);
+            var typeRandomizerService = new DropTypeRandomizerMod(itemRandomizerService, opts);
 
             randomizerService.RandomizeItems(gameFiles);
 

@@ -45,7 +45,7 @@ namespace BSTrueRandomizer.model
 
         public bool IsEntryBreakableWall()
         {
-            return !Key.ToLower().StartsWith("wall_");
+            return Key.ToLower().StartsWith("wall_");
         }
 
         private string GetFirstDropItemName()

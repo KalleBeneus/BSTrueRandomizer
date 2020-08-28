@@ -13,23 +13,25 @@ namespace BSTrueRandomizer.mod
     {
         private const string ItemTypeNonKey = Constants.ItemTypeWeapon;
 
-        private readonly Dictionary<string, string> _fixedKeyLocations = new Dictionary<string, string>
+        private readonly Dictionary<string, int> _fixedKeyLocations = new Dictionary<string, int>
         {
-            {"VillageKeyBox", Constants.ItemTypeKey},
-            {"PhotoEvent", Constants.ItemTypeKey},
-            {"CertificationboardEvent", Constants.ItemTypeKey},
-            {"Swordsman", Constants.ItemTypeKey},
-            {"Treasurebox_SAN024", Constants.ItemTypeWeapon},
-            {"Treasurebox_TWR019", Constants.ItemTypeKey},
-            {"Treasurebox_KNG021", Constants.ItemTypeUniqueCraft},
-            {"Treasurebox_ARC006", Constants.ItemTypeAccessory}
+            {"VillageKeyBox", 19},
+            {"PhotoEvent", 21},
+            {"CertificationboardEvent", 22},
+            {"Swordsman", 24},
+            {"Treasurebox_SAN024", 183},
+            {"Treasurebox_TWR019", 216},
+            {"Treasurebox_KNG021", 269},
+            {"Treasurebox_ARC006", 386}
         };
 
         private readonly ItemRandomizerService _randomizerService;
+        private readonly Options _options;
 
-        public DropTypeRandomizerMod(ItemRandomizerService randomizerService)
+        public DropTypeRandomizerMod(ItemRandomizerService randomizerService, Options options)
         {
             _randomizerService = randomizerService;
+            _options = options;
         }
 
         public void SetAllItemLocationsToSameType(List<DropItemEntry> gameDataToModify)
@@ -57,9 +59,8 @@ namespace BSTrueRandomizer.mod
          */
         public void SetRandomKeyItemLocations(List<DropItemEntry> gameDataToModify)
         {
-            const int numberOfRandomKeyLocations = 15; // TODO turn into option
             List<DropItemEntry> randomizableEntries = gameDataToModify.Where(IsKeyItemLocationCandidate).ToList();
-            ICollection<DropItemEntry> entriesToSetAsKey = _randomizerService.GetRandomEntriesFromList(randomizableEntries, numberOfRandomKeyLocations);
+            ICollection<DropItemEntry> entriesToSetAsKey = _randomizerService.GetRandomEntriesFromList(randomizableEntries, _options.NumberOfKeyLocations);
 
             SetKeyTypeForRandomAndFixedLocations(gameDataToModify, entriesToSetAsKey);
         }
@@ -71,7 +72,7 @@ namespace BSTrueRandomizer.mod
 
         private bool IsFixedKeyItemLocation(DropItemEntry itemEntry)
         {
-            return _fixedKeyLocations.ContainsKey(itemEntry.Key) && itemEntry.GetItemType().Equals(_fixedKeyLocations[itemEntry.Key]);
+            return _fixedKeyLocations.ContainsKey(itemEntry.Key) && itemEntry.Value.Id.Equals(_fixedKeyLocations[itemEntry.Key]);
         }
 
         private void SetKeyTypeForRandomAndFixedLocations(IEnumerable<DropItemEntry> gameDataToModify, ICollection<DropItemEntry> entriesToSetAsKey)

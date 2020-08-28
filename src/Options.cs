@@ -10,6 +10,9 @@ namespace BSTrueRandomizer
         [Option('t', "type-randomize", Required = false, HelpText = "Randomize chest types")]
         public bool IsRandomizeType { get; set; }
 
+        [Option('k', "key-locations", Required = false, HelpText = "Set the number of randomly selected key item locations. Defaults to 15.")]
+        public int NumberOfKeyLocations { get; set; } = 15;
+
         [Option('o', "output", Required = false, HelpText = "Output folder path")]
         public string OutputPath { get; set; } = "./";
 
