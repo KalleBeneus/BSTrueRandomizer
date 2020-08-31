@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BSTrueRandomizer.Exceptions
+﻿namespace BSTrueRandomizer.Exceptions
 {
     public class RandomizationException : RandomizerBaseException
     {
