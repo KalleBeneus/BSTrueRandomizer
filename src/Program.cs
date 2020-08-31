@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using BSTrueRandomizer.config;
+using BSTrueRandomizer.Exceptions;
 using BSTrueRandomizer.mod;
 using BSTrueRandomizer.model.composite;
 using BSTrueRandomizer.service;
@@ -16,14 +17,25 @@ namespace BSTrueRandomizer
         public static void Main(string[] args)
         {
             ParserResult<Options> parserResult = Parser.Default.ParseArguments<Options>(args);
-            parserResult.WithParsed(RunMain);
+            try
+            {
+                parserResult.WithParsed(o => o.NormalizeInput())
+                    .WithParsed(o => o.Validate())
+                    .WithParsed(RunMain);
+            }
+            catch (RandomizerBaseException e)
+            {
+                Console.WriteLine($@"ERROR: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(@"ERROR: An unexpected problem occurred. If the problem persists, contact the project maintainer.");
+                Console.WriteLine($@"Details: {e.Message}");
+            }
         }
 
         public static void RunMain(Options opts)
         {
-            opts.NormalizeInput();
-            opts.Validate();
-
             var gameFileReader = new GameFileService(opts.InputPath);
             GameFiles gameFiles = gameFileReader.ReadAllFiles();
 
