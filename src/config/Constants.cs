@@ -16,7 +16,6 @@
         public const string ItemTypeCoin = "EItemType::Coin";
         public const string ItemTypeUpgrade = "EItemType::Upgrade";
         public const string ItemTypeRecipe = "EItemType::Recipe";
-        public const string ItemTypeUniqueCraft = "EItemType::UniqueCraft";
 
 
         public const string FileNameDropRateMaster = "PB_DT_DropRateMaster";

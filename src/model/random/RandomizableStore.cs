@@ -16,7 +16,7 @@ namespace BSTrueRandomizer.model.random
 
         public int AvailableItemCountByType(string itemType)
         {
-            return _availableItems[itemType].Count; // TODO add contains checks for all methods taking itemType
+            return _availableItems[itemType].Count; // TODO add missing key handling for all methods taking itemType
         }
 
         public int AvailableNonCraftableItemCountByType(string itemType)
