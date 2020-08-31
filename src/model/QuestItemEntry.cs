@@ -1,5 +1,6 @@
 ﻿
 using System;
+using BSTrueRandomizer.config;
 using BSTrueRandomizer.Exceptions;
 
 namespace BSTrueRandomizer.model

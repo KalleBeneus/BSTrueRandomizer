@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BSTrueRandomizer.config;
 using BSTrueRandomizer.model;
 
 namespace BSTrueRandomizer.service
@@ -43,7 +44,7 @@ namespace BSTrueRandomizer.service
 
         public string FindAndConvertItemTypeFromName(string itemName)
         {
-            if (itemName == null || Constants.EntryInfoNone.Equals(itemName) || !_masterItemTypes.ContainsKey(itemName))
+            if (itemName == null || Constants.ItemNameNone.Equals(itemName) || !_masterItemTypes.ContainsKey(itemName))
             {
                 return Constants.ItemTypeNone;
             }

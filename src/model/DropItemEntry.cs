@@ -1,4 +1,5 @@
 ﻿using System;
+using BSTrueRandomizer.config;
 using BSTrueRandomizer.Exceptions;
 
 namespace BSTrueRandomizer.model
@@ -54,24 +55,24 @@ namespace BSTrueRandomizer.model
             {
                 return "Coin";
             }
-            if (!Constants.EntryInfoNone.Equals(Value.CommonItemId))
+            if (!Constants.ItemNameNone.Equals(Value.CommonItemId))
             {
                 return Value.CommonItemId;
             }
-            if (!Constants.EntryInfoNone.Equals(Value.RareItemId))
+            if (!Constants.ItemNameNone.Equals(Value.RareItemId))
             {
                 return Value.RareItemId;
             }
-            if (!Constants.EntryInfoNone.Equals(Value.CommonIngredientId))
+            if (!Constants.ItemNameNone.Equals(Value.CommonIngredientId))
             {
                 return Value.CommonIngredientId;
             }
-            if (!Constants.EntryInfoNone.Equals(Value.RareIngredientId))
+            if (!Constants.ItemNameNone.Equals(Value.RareIngredientId))
             {
                 return Value.RareIngredientId;
             }
 
-            return Constants.EntryInfoNone;
+            return Constants.ItemNameNone;
         }
 
         protected bool Equals(DropItemEntry other)

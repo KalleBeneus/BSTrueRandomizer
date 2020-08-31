@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
+using BSTrueRandomizer.config;
 using BSTrueRandomizer.Exceptions;
 using BSTrueRandomizer.model;
 using BSTrueRandomizer.model.composite;
@@ -30,7 +31,7 @@ namespace BSTrueRandomizer.service
 
         public GameFiles ReadAllFiles(string folderPath = "")
         {
-            string path = string.IsNullOrWhiteSpace(folderPath) ? _inputFolderPath : FileUtil.AddFolderSeparatorIfMissing(folderPath);
+            string path = string.IsNullOrWhiteSpace(folderPath) ? _inputFolderPath : folderPath;
 
             string dropMasterString = ReadGameFileText(path, Constants.FileNameDropRateMaster);
             var dropList = JsonConvert.DeserializeObject<List<DropItemEntry>>(dropMasterString);
@@ -49,7 +50,7 @@ namespace BSTrueRandomizer.service
         private string ReadGameFileText(string userProvidedPath, string fileName)
         {
             string jsonFileName = FileUtil.GetJsonFileName(fileName);
-            string defaultFilePath = Path.Combine(Constants.DefaultInputFolderPath, jsonFileName);
+            string defaultFilePath = Path.Combine(Directory.GetCurrentDirectory(), jsonFileName);
             if (!string.IsNullOrWhiteSpace(userProvidedPath))
             {
                 return TryReadFileContents(userProvidedPath, jsonFileName);
@@ -64,7 +65,7 @@ namespace BSTrueRandomizer.service
             if (!File.Exists(filePath))
             {
                 throw new InputException(
-                    $"'{jsonFileName}' file could not be found in input folder '{path}'. Add the file or specify another folder with -input <folder path>");
+                    $"'{jsonFileName}' file could not be found in input folder '{path}'. Add the file or specify another folder with --input <folder path>");
             }
 
             return File.ReadAllText(filePath);
@@ -80,11 +81,10 @@ namespace BSTrueRandomizer.service
 
         public static void WriteModifiedJsonFiles(GameFiles gameFiles, string outputFolder)
         {
-            string outputFolderPath = FileUtil.AddFolderSeparatorIfMissing(outputFolder);
 
-            WriteModifiedJsonFile(gameFiles.DropList, Constants.FileNameDropRateMaster, outputFolderPath);
-            WriteModifiedJsonFile(gameFiles.QuestList, Constants.FileNameQuestMaster, outputFolderPath);
-            WriteModifiedJsonFile(gameFiles.CraftList, Constants.FileNameCraftMaster, outputFolderPath);
+            WriteModifiedJsonFile(gameFiles.DropList, Constants.FileNameDropRateMaster, outputFolder);
+            WriteModifiedJsonFile(gameFiles.QuestList, Constants.FileNameQuestMaster, outputFolder);
+            WriteModifiedJsonFile(gameFiles.CraftList, Constants.FileNameCraftMaster, outputFolder);
         }
 
         private static void WriteModifiedJsonFile(IEnumerable<IItemEntry> modifiedData, string fileName, string outputFolderPath)
@@ -122,7 +122,7 @@ namespace BSTrueRandomizer.service
         public static void CreatePakFile(Options opts)
         {
             string fileListPath = Path.Combine(opts.OutputPath, "filelist.txt");
-            string uassetBasePath = Path.Combine(opts.OutputPath, Constants.UassetPathBase);
+            string uassetBasePath = Path.Combine(opts.OutputPath, Constants.UassetPathRelativeBase);
             File.WriteAllText(fileListPath, $"\"{uassetBasePath}*.*\" \"..\\..\\..\\*.*\"");
 
             string pakFileName = string.IsNullOrWhiteSpace(opts.SeedText) ? Constants.DefaultPakFileName : opts.SeedText;

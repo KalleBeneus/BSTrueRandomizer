@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BSTrueRandomizer.config;
 using BSTrueRandomizer.model;
 using BSTrueRandomizer.service;
 

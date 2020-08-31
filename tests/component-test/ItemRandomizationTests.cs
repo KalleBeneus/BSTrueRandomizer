@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BSTrueRandomizer;
+using BSTrueRandomizer.config;
 using BSTrueRandomizer.model;
 using BSTrueRandomizer.model.composite;
 using BSTrueRandomizer.service;
@@ -329,7 +330,7 @@ namespace BSTrueRandomizerTest
 
             //Assert
             List<CraftItemEntry> resultCraftList = gameFileReader.ReadAllFiles(FolderPathOutput).CraftList;
-            List<string> craftItemNames = resultCraftList.Where(entry => entry.IsEntryValid() && !Constants.EntryInfoNone.Equals(entry.GetItemName()))
+            List<string> craftItemNames = resultCraftList.Where(entry => entry.IsEntryValid() && !Constants.ItemNameNone.Equals(entry.GetItemName()))
                 .Select(entry => entry.GetItemName())
                 .ToList();
             HashSet<string> craftItemNameSet = craftItemNames.ToHashSet();
@@ -388,7 +389,7 @@ namespace BSTrueRandomizerTest
 
         private int GetResultingCraftListItemCount(IEnumerable<IItemEntry> itemEntryList)
         {
-            return itemEntryList.Count(entry => !Constants.EntryInfoNone.Equals(entry.GetItemName()));
+            return itemEntryList.Count(entry => !Constants.ItemNameNone.Equals(entry.GetItemName()));
         }
 
         private static void AssertInputAndOutputItemTypesMatch<T>(List<T> inputItemList, List<T> outputItemList) where T : IItemEntry
@@ -400,7 +401,7 @@ namespace BSTrueRandomizerTest
                 if (inputEntry.IsEntryValid())
                 {
                     IItemEntry outputEntry = outputItemList[i];
-                    if (outputEntry is CraftItemEntry && Constants.EntryInfoNone.Equals(outputEntry.GetItemName()))
+                    if (outputEntry is CraftItemEntry && Constants.ItemNameNone.Equals(outputEntry.GetItemName()))
                     {
                         int replacementItemIndex = inputItemList.Count + numberOfAddedEntriesFound;
                         outputEntry = outputItemList[replacementItemIndex];

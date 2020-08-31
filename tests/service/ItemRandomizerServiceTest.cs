@@ -10,14 +10,12 @@ namespace BSTrueRandomizerTest.service
     [TestClass]
     public class ItemRandomizerServiceTest
     {
-        private Random _random;
         private ItemRandomizerService _service;
 
         [TestInitialize]
         public void Setup()
         {
-            _random = new Random(132);
-            _service = new ItemRandomizerService(_random);
+            _service = new ItemRandomizerService(new Random());
         }
 
         [TestMethod]
@@ -58,13 +56,6 @@ namespace BSTrueRandomizerTest.service
             const int expectedNumberOfUniqueEntries = 3;
             Assert.AreEqual(expectedNumberOfUniqueEntries, resultSet.Count);
         }
-
-        //[TestMethod]
-        //public void TestGetMultipleRandomEntriesFromListHandlesRandomNumberCollisions()
-        //{
-        //    //TODO
-        //    Assert.Fail();
-        //}
 
         [TestMethod]
         public void TestGetSingleRandomEntryFromList()

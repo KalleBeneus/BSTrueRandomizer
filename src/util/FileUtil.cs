@@ -1,16 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Resources;
+using BSTrueRandomizer.config;
 using BSTrueRandomizer.Exceptions;
 
 namespace BSTrueRandomizer.util
 {
     public class FileUtil
     {
-        public static string AddFolderSeparatorIfMissing(string folderPath)
-        {
-            return Path.TrimEndingDirectorySeparator(folderPath) + Path.DirectorySeparatorChar;
-        }
 
         public static string GetResourceFileAsString(string fileName)
         {
@@ -21,7 +18,7 @@ namespace BSTrueRandomizer.util
             }
             catch (Exception ex) when (ex is MissingManifestResourceException || ex is MissingSatelliteAssemblyException)
             {
-                throw new InputException($"'{fileName}' could not be found. You can specify the folder where the file is located with -input <folder path>");
+                throw new InputException($"'{fileName}' could not be found. You can specify the folder where the file is located with --input <folder path>");
             }
         }
 
@@ -39,11 +36,6 @@ namespace BSTrueRandomizer.util
             {
                 return new byte[0];
             }
-        }
-
-        public static string GetJsonFilePath(string path, string fileName)
-        {
-            return Path.Combine(path, fileName, Constants.FileExtensionJson);
         }
 
         public static string GetJsonFileName(string fileName)

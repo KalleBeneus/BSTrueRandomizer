@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using BSTrueRandomizer.config;
 using BSTrueRandomizer.mod;
 using BSTrueRandomizer.model.composite;
 using BSTrueRandomizer.service;
@@ -20,20 +21,23 @@ namespace BSTrueRandomizer
 
         public static void RunMain(Options opts)
         {
+            opts.NormalizeInput();
+            opts.Validate();
+
             var gameFileReader = new GameFileService(opts.InputPath);
             GameFiles gameFiles = gameFileReader.ReadAllFiles();
 
             Random random = CreateSeededRandom(opts.SeedText);
             var itemRandomizerService = new ItemRandomizerService(random);
-            var randomizerService = new ItemPlacementRandomizerMod(itemRandomizerService);
-            var typeRandomizerService = new DropTypeRandomizerMod(itemRandomizerService, opts);
+            var itemPlacementRandomizerMod = new ItemPlacementRandomizerMod(itemRandomizerService);
+            var dropTypeRandomizerMod = new DropTypeRandomizerMod(itemRandomizerService, opts);
 
-            randomizerService.RandomizeItems(gameFiles);
+            itemPlacementRandomizerMod.RandomizeItems(gameFiles);
 
             if (opts.IsRandomizeType)
             {
-                typeRandomizerService.SetAllItemLocationsToSameType(gameFiles.DropList);
-                typeRandomizerService.SetRandomKeyItemLocations(gameFiles.DropList);
+                dropTypeRandomizerMod.SetAllItemLocationsToSameType(gameFiles.DropList);
+                dropTypeRandomizerMod.SetRandomKeyItemLocations(gameFiles.DropList);
             }
 
             if (opts.IsJsonOutput || opts.IsJsonOnly)
@@ -43,7 +47,7 @@ namespace BSTrueRandomizer
 
             if (!opts.IsJsonOnly)
             {
-                string assetOutputFolder = Path.Combine(opts.OutputPath, Constants.UassetPathBase, Constants.UassetPathSub);
+                string assetOutputFolder = Path.Combine(opts.OutputPath, Constants.UassetPathRelativeBase, Constants.UassetPathRelativeSub);
                 GameFileService.WriteModifiedUassetFiles(gameFiles, assetOutputFolder);
                 GameFileService.CreatePakFile(opts);
             }

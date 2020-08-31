@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BSTrueRandomizer.config;
 using BSTrueRandomizer.model;
 using BSTrueRandomizer.model.composite;
 using BSTrueRandomizer.model.random;
@@ -119,13 +120,13 @@ namespace BSTrueRandomizer.mod
             dropEntry.Value.RareItemQuantity = 1;
             dropEntry.Value.RareItemRate = 100.0;
 
-            dropEntry.Value.CommonItemId = Constants.EntryInfoNone;
+            dropEntry.Value.CommonItemId = Constants.ItemNameNone;
             dropEntry.Value.CommonItemQuantity = 0;
             dropEntry.Value.CommonRate = 0.0;
-            dropEntry.Value.CommonIngredientId = Constants.EntryInfoNone;
+            dropEntry.Value.CommonIngredientId = Constants.ItemNameNone;
             dropEntry.Value.CommonIngredientQuantity = 0;
             dropEntry.Value.CommonIngredientRate = 0.0;
-            dropEntry.Value.RareIngredientId = Constants.EntryInfoNone;
+            dropEntry.Value.RareIngredientId = Constants.ItemNameNone;
             dropEntry.Value.RareIngredientQuantity = 0;
             dropEntry.Value.RareIngredientRate = 0.0;
         }
@@ -201,7 +202,7 @@ namespace BSTrueRandomizer.mod
 
         private CraftItemEntry CreateReplacementCraftEntry(CraftItemEntry craftItem, string randomItemName)
         {
-            craftItem.Value.CraftItemId = Constants.EntryInfoNone;
+            craftItem.Value.CraftItemId = Constants.ItemNameNone;
             CraftItemValues newCraftItemValues = craftItem.Value.Copy();
             newCraftItemValues.CraftItemId = randomItemName;
             return new CraftItemEntry(randomItemName, newCraftItemValues);

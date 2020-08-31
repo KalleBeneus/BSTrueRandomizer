@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BSTrueRandomizer;
+using BSTrueRandomizer.config;
 using BSTrueRandomizer.model;
 using BSTrueRandomizer.service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -33,9 +34,9 @@ namespace BSTrueRandomizerTest
 
             //Assert
             List<DropItemEntry> outputDropList = gameFileReader.ReadAllFiles(FolderPathOutput).DropList;
-            AssertKeyTypeForEntryNamed(outputDropList, "Swordsman");
-            AssertKeyTypeForEntryNamed(outputDropList, "CertificationboardEvent");
-            AssertKeyTypeForEntryNamed(outputDropList, "Treasurebox_SAN024");
+            AssertKeyTypeForNamedEntry(outputDropList, "Swordsman");
+            AssertKeyTypeForNamedEntry(outputDropList, "CertificationboardEvent");
+            AssertKeyTypeForNamedEntry(outputDropList, "Treasurebox_SAN024");
         }
 
         [TestMethod]
@@ -101,7 +102,7 @@ namespace BSTrueRandomizerTest
             Assert.AreEqual(numberOfTypesThatAreNotChangeable + 1, numberOfValidTypesNames);
         }
 
-        private static void AssertKeyTypeForEntryNamed(List<DropItemEntry> outputDropList, string entryName)
+        private static void AssertKeyTypeForNamedEntry(List<DropItemEntry> outputDropList, string entryName)
         {
             string fixedLocationItemType = GetItemTypeForEntryId(outputDropList, entryName);
             Assert.AreEqual(Constants.ItemTypeKey, fixedLocationItemType);
