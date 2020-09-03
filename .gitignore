@@ -351,3 +351,4 @@ MigrationBackup/
 
 src/resources/
 *.resx
+*launchSettings.json

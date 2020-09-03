@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "BSTrueRandomizer": {
-      "commandName": "Project",
-      "commandLineArgs": "-o C:\\Development\\modding\\Bloodstained\\dev\\RandomizerAllRandom\\Edits\\BloodstainedRotN\\Content\\Core\\DataTable\\"
-    }
-  }
-}
