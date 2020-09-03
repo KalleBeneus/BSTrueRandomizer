@@ -29,8 +29,8 @@ namespace BSTrueRandomizer
             }
             catch (Exception e)
             {
-                Console.WriteLine(@"ERROR: An unexpected problem occurred. If the problem persists, contact the project maintainer.");
-                Console.WriteLine($@"Details: {e.Message}");
+                Console.WriteLine("ERROR: An unexpected problem occurred. If the problem persists, contact the project maintainer.");
+                Console.WriteLine($"\tDetails: {e.Message}; Location: {e.TargetSite?.Name}");
             }
         }
 
