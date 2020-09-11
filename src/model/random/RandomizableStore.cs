@@ -112,13 +112,13 @@ namespace BSTrueRandomizer.model.random
 
         private void IncrementItemOccurrence(RandomizableEntry itemToAdd)
         {
-            RandomizableEntry existingEntry = _availableItems[itemToAdd.ItemType].Find(entry => entry.Equals(itemToAdd));
+            RandomizableEntry? existingEntry = _availableItems[itemToAdd.ItemType].Find(entry => entry.Equals(itemToAdd));
             existingEntry?.IncrementOccurrence();
         }
 
         private void MarkItemCraftable(RandomizableEntry itemToAdd)
         {
-            RandomizableEntry existingEntry = _availableItems[itemToAdd.ItemType].Find(entry => entry.Equals(itemToAdd));
+            RandomizableEntry? existingEntry = _availableItems[itemToAdd.ItemType].Find(entry => entry.Equals(itemToAdd));
             if (existingEntry != null)
             {
                 existingEntry.IsCraftable = true;

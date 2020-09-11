@@ -80,7 +80,7 @@ namespace BSTrueRandomizer.model
             return Key == other.Key && Value.Equals(other.Value);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;

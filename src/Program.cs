@@ -4,13 +4,12 @@ using BSTrueRandomizer.config;
 using BSTrueRandomizer.Exceptions;
 using BSTrueRandomizer.mod;
 using BSTrueRandomizer.model.composite;
+using BSTrueRandomizer.model.values;
 using BSTrueRandomizer.service;
 using BSTrueRandomizer.util;
 using CommandLine;
 
 namespace BSTrueRandomizer
-
-    // TODO Error handling with friendly error messages on console
 {
     public class Program
     {
@@ -19,8 +18,8 @@ namespace BSTrueRandomizer
             ParserResult<Options> parserResult = Parser.Default.ParseArguments<Options>(args);
             try
             {
-                parserResult.WithParsed(o => o.NormalizeInput())
-                    .WithParsed(o => o.Validate())
+                parserResult.WithParsed(options => options.NormalizeInput())
+                    .WithParsed(options => options.Validate())
                     .WithParsed(RunMain);
             }
             catch (RandomizerBaseException e)
@@ -36,38 +35,40 @@ namespace BSTrueRandomizer
 
         public static void RunMain(Options opts)
         {
-            var gameFileReader = new GameFileService(opts.InputPath);
-            GameFiles gameFiles = gameFileReader.ReadAllFiles();
-
             Random random = CreateSeededRandom(opts.SeedText);
             var itemRandomizerService = new ItemRandomizerService(random);
+            var uassetService = new UassetService();
+
+            var gameFileService = new GameFileService(opts.InputPath, uassetService);
+
             var itemPlacementRandomizerMod = new ItemPlacementRandomizerMod(itemRandomizerService);
             var dropTypeRandomizerMod = new DropTypeRandomizerMod(itemRandomizerService, opts);
+            var modManager = new ModManager(opts, itemPlacementRandomizerMod, dropTypeRandomizerMod);
 
-            itemPlacementRandomizerMod.RandomizeItems(gameFiles);
+            CreateTrueRandomizerMod(opts, gameFileService, modManager);
+        }
 
-            if (opts.IsRandomizeType)
-            {
-                dropTypeRandomizerMod.SetAllItemLocationsToSameType(gameFiles.DropList);
-                dropTypeRandomizerMod.SetRandomKeyItemLocations(gameFiles.DropList);
-            }
+        private static Random CreateSeededRandom(string? seedText)
+        {
+            return string.IsNullOrWhiteSpace(seedText) ? new Random() : new Random(SeedConverter.CalculateSeedNumberFromString(seedText));
+        }
+
+        private static void CreateTrueRandomizerMod(Options opts, GameFileService gameFileService, ModManager modManager)
+        {
+            GameFiles gameFiles = gameFileService.ReadAllFiles();
+
+            modManager.ApplyMods(gameFiles);
 
             if (opts.IsJsonOutput || opts.IsJsonOnly)
             {
-                GameFileService.WriteModifiedJsonFiles(gameFiles, opts.OutputPath);
+                gameFileService.WriteModifiedJsonFiles(gameFiles, opts.OutputPath);
             }
 
             if (!opts.IsJsonOnly)
             {
-                string assetOutputFolder = Path.Combine(opts.OutputPath, Constants.UassetPathRelativeBase, Constants.UassetPathRelativeSub);
-                GameFileService.WriteModifiedUassetFiles(gameFiles, assetOutputFolder);
-                GameFileService.CreatePakFile(opts);
+                var packageFilePath = new FilePath(opts.OutputPath, opts.SeedText, extension: Constants.FileExtensionPak, defaultFileName: Constants.DefaultPakFileName);
+                gameFileService.WritePackagedModFile(gameFiles, packageFilePath);
             }
-        }
-
-        private static Random CreateSeededRandom(string seedText)
-        {
-            return string.IsNullOrWhiteSpace(seedText) ? new Random() : new Random(SeedConverter.CalculateSeedNumberFromString(seedText));
         }
     }
 }

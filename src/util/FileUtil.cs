@@ -8,13 +8,12 @@ namespace BSTrueRandomizer.util
 {
     public class FileUtil
     {
-
         public static string GetResourceFileAsString(string fileName)
         {
             try
             {
-                object fileObject = Properties.Resources.ResourceManager.GetObject(fileName);
-                return fileObject != null ? System.Text.Encoding.UTF8.GetString(fileObject as byte[]) : "";
+                object? fileObject = Properties.Resources.ResourceManager.GetObject(fileName);
+                return fileObject != null ? System.Text.Encoding.UTF8.GetString((byte[]) fileObject) : "";
             }
             catch (Exception ex) when (ex is MissingManifestResourceException || ex is MissingSatelliteAssemblyException)
             {
@@ -30,6 +29,7 @@ namespace BSTrueRandomizer.util
                 {
                     return new byte[0];
                 }
+
                 return bytes;
             }
             catch (Exception ex) when (ex is MissingManifestResourceException || ex is MissingSatelliteAssemblyException)

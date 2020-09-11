@@ -1,34 +1,35 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace BSTrueRandomizer.model
 {
+    [DataContract]
     public class CraftItemValues
     {
-        public string Type { get; set; }
-        public string CraftItemId { get; set; }
-        public int CraftValue { get; set; }
-        public int RankMin { get; set; }
-        public int RankMax { get; set; }
-        public string Ingredient1Id { get; set; }
-        public int Ingredient1Total { get; set; }
-        public string Ingredient2Id { get; set; }
-        public int Ingredient2Total { get; set; }
-        public string Ingredient3Id { get; set; }
-        public int Ingredient3Total { get; set; }
-        public string Ingredient4Id { get; set; }
-        public int Ingredient4Total { get; set; }
-        public string OpenKeyRecipeId { get; set; }
-        public string OpenCondition { get; set; }
-        public int OpenParameter { get; set; }
-        public string FirstTimeBonusSpecialEffectId { get; set; }
-        public List<string> FirstBonusType { get; set; }
-        public List<string> FirstBonusValue { get; set; }
-        public int Alkhahest { get; set; }
+        [DataMember(IsRequired = true)] public string Type { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string CraftItemId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public int CraftValue { get; set; }
+        [DataMember(IsRequired = true)] public int RankMin { get; set; }
+        [DataMember(IsRequired = true)] public int RankMax { get; set; }
+        [DataMember(IsRequired = true)] public string Ingredient1Id { get; set; } = default!;
+        [DataMember(IsRequired = true)] public int Ingredient1Total { get; set; }
+        [DataMember(IsRequired = true)] public string Ingredient2Id { get; set; } = default!;
+        [DataMember(IsRequired = true)] public int Ingredient2Total { get; set; }
+        [DataMember(IsRequired = true)] public string Ingredient3Id { get; set; } = default!;
+        [DataMember(IsRequired = true)] public int Ingredient3Total { get; set; }
+        [DataMember(IsRequired = true)] public string Ingredient4Id { get; set; } = default!;
+        [DataMember(IsRequired = true)] public int Ingredient4Total { get; set; }
+        [DataMember(IsRequired = true)] public string OpenKeyRecipeId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string OpenCondition { get; set; } = default!;
+        [DataMember(IsRequired = true)] public int OpenParameter { get; set; }
+        [DataMember(IsRequired = true)] public string FirstTimeBonusSpecialEffectId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public List<string> FirstBonusType { get; set; } = default!;
+        [DataMember(IsRequired = true)] public List<string> FirstBonusValue { get; set; } = default!;
+        [DataMember(IsRequired = true)] public int Alkhahest { get; set; }
 
-        [JsonIgnore]
-        public string ItemReferenceType { get; set; }
+        [JsonIgnore] public string? ItemReferenceType { get; set; }
 
         public CraftItemValues Copy()
         {
@@ -59,7 +60,7 @@ namespace BSTrueRandomizer.model
                    Alkhahest == other.Alkhahest;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -82,5 +83,4 @@ namespace BSTrueRandomizer.model
                    $"{FirstTimeBonusSpecialEffectId}, {nameof(FirstBonusType)}: {FirstBonusType}, {nameof(FirstBonusValue)}: {FirstBonusValue}, {nameof(Alkhahest)}: {Alkhahest}";
         }
     }
-
 }

@@ -1,66 +1,68 @@
-﻿using Newtonsoft.Json;
+﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace BSTrueRandomizer.model
 {
+    [DataContract]
     public class QuestItemValues
     {
-        public string QuestType { get; set; }
-        public string Title { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Caption { get; set; }
-        public string ClientId { get; set; }
-        public string Place { get; set; }
-        public bool IsReAcceptable { get; set; }
-        public string NeedQuestId { get; set; }
-        public string NeedAreaId { get; set; }
-        public string NeedItemId { get; set; }
-        public string NeedBossId { get; set; }
-        public string NeedDlc { get; set; }
-        public string StartItemId { get; set; }
-        public string Item01 { get; set; }
-        public int ItemNum01 { get; set; }
-        public string Item02 { get; set; }
-        public int ItemNum02 { get; set; }
-        public string Item03 { get; set; }
-        public int ItemNum03 { get; set; }
-        public bool EraseItem { get; set; }
-        public bool NeedComplete { get; set; }
-        public string Enemy01 { get; set; }
-        public int EnemyNum01 { get; set; }
-        public int Experience { get; set; }
-        public string RewardItem01 { get; set; }
-        public int RewardNum01 { get; set; }
-        public string RewardOtherwise { get; set; }
-        public string AcceptEventId { get; set; }
-        public string CompletedEventId { get; set; }
-        public string AcceptDialogueId { get; set; }
-        public string CancelDialogueId { get; set; }
-        public bool IsReject { get; set; }
-        public string UnlockArchives { get; set; }
-        public string EnemySpawnLocations { get; set; }
+        [DataMember(IsRequired = true)] public string QuestType { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string Title { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string Name { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string Description { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string Caption { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string ClientId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string Place { get; set; } = default!;
+        [DataMember(IsRequired = true)] public bool IsReAcceptable { get; set; }
+        [DataMember(IsRequired = true)] public string NeedQuestId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string NeedAreaId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string NeedItemId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string NeedBossId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string NeedDlc { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string StartItemId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string Item01 { get; set; } = default!;
+        [DataMember(IsRequired = true)] public int ItemNum01 { get; set; }
+        [DataMember(IsRequired = true)] public string Item02 { get; set; } = default!;
+        [DataMember(IsRequired = true)] public int ItemNum02 { get; set; }
+        [DataMember(IsRequired = true)] public string Item03 { get; set; } = default!;
+        [DataMember(IsRequired = true)] public int ItemNum03 { get; set; }
+        [DataMember(IsRequired = true)] public bool EraseItem { get; set; }
+        [DataMember(IsRequired = true)] public bool NeedComplete { get; set; }
+        [DataMember(IsRequired = true)] public string Enemy01 { get; set; } = default!;
+        [DataMember(IsRequired = true)] public int EnemyNum01 { get; set; }
+        [DataMember(IsRequired = true)] public int Experience { get; set; }
+        [DataMember(IsRequired = true)] public string RewardItem01 { get; set; } = default!;
+        [DataMember(IsRequired = true)] public int RewardNum01 { get; set; }
+        [DataMember(IsRequired = true)] public string RewardOtherwise { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string AcceptEventId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string CompletedEventId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string AcceptDialogueId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string CancelDialogueId { get; set; } = default!;
+        [DataMember(IsRequired = true)] public bool IsReject { get; set; }
+        [DataMember(IsRequired = true)] public string UnlockArchives { get; set; } = default!;
+        [DataMember(IsRequired = true)] public string EnemySpawnLocations { get; set; } = default!;
 
         [JsonIgnore]
-        public string ItemReferenceType { get; set; }
+        public string? ItemReferenceType { get; set; }
 
         protected bool Equals(QuestItemValues other)
         {
-            return QuestType == other.QuestType && 
-                   Title == other.Title && 
-                   Name == other.Name && 
-                   Description == other.Description && 
-                   Caption == other.Caption && 
-                   ClientId == other.ClientId && 
-                   Place == other.Place && 
-                   IsReAcceptable == other.IsReAcceptable && 
-                   NeedQuestId == other.NeedQuestId && 
-                   NeedAreaId == other.NeedAreaId && 
-                   NeedItemId == other.NeedItemId && 
-                   NeedBossId == other.NeedBossId && 
-                   NeedDlc == other.NeedDlc && 
-                   StartItemId == other.StartItemId && 
-                   Item01 == other.Item01 && 
-                   ItemNum01 == other.ItemNum01 && 
+            return QuestType == other.QuestType &&
+                   Title == other.Title &&
+                   Name == other.Name &&
+                   Description == other.Description &&
+                   Caption == other.Caption &&
+                   ClientId == other.ClientId &&
+                   Place == other.Place &&
+                   IsReAcceptable == other.IsReAcceptable &&
+                   NeedQuestId == other.NeedQuestId &&
+                   NeedAreaId == other.NeedAreaId &&
+                   NeedItemId == other.NeedItemId &&
+                   NeedBossId == other.NeedBossId &&
+                   NeedDlc == other.NeedDlc &&
+                   StartItemId == other.StartItemId &&
+                   Item01 == other.Item01 &&
+                   ItemNum01 == other.ItemNum01 &&
                    Item02 == other.Item02 &&
                    ItemNum02 == other.ItemNum02 &&
                    Item03 == other.Item03 &&
@@ -82,7 +84,7 @@ namespace BSTrueRandomizer.model
                    EnemySpawnLocations == other.EnemySpawnLocations;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;

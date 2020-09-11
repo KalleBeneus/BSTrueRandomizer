@@ -27,7 +27,7 @@ namespace BSTrueRandomizerTest
             const int expectedRandomKeyLocations = 0;
             _opts.NumberOfKeyLocations = expectedRandomKeyLocations;
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -47,7 +47,7 @@ namespace BSTrueRandomizerTest
             const int expectedFixedKeyLocations = 3;
             _opts.NumberOfKeyLocations = expectedRandomKeyLocations;
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -65,7 +65,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -87,7 +87,7 @@ namespace BSTrueRandomizerTest
 
             _opts.NumberOfKeyLocations = expectedRandomKeyLocations;
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);

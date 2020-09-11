@@ -27,7 +27,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -46,7 +46,7 @@ namespace BSTrueRandomizerTest
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestMultipleInstanceUniqueItems\";
             _opts.SeedText = "SeedText-TwoUniquesInDropAndQuestZeroInCraftList";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -66,7 +66,7 @@ namespace BSTrueRandomizerTest
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestMultipleInstanceUniqueItems\";
             _opts.SeedText = "SeedText-1UniqueItemInDropOrQuest1InCraft";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -86,7 +86,7 @@ namespace BSTrueRandomizerTest
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestMultipleInstanceUniqueItems\";
             _opts.SeedText = "SeedText-MultipleUniquesAreAllAssignedToCrafting";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -109,7 +109,7 @@ namespace BSTrueRandomizerTest
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestMultipleInstanceUniqueItems\";
             _opts.SeedText = "SeedText-TwoCraftableInDropAndQuestBothSetAsFindable";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -126,7 +126,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -145,7 +145,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -163,7 +163,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -181,7 +181,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -222,7 +222,7 @@ namespace BSTrueRandomizerTest
             // Assign
             _opts.SeedText = "SeedText-FixedSeed";
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -247,7 +247,7 @@ namespace BSTrueRandomizerTest
             const string firstSeed = "SeedText-First";
             const string secondSeed = "SeedText-Second";
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             _opts.SeedText = firstSeed;
@@ -273,7 +273,7 @@ namespace BSTrueRandomizerTest
             // Assign
             const string keyWeaponId = "keyitem_weapon_1";
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -296,7 +296,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
             GameFiles inputFiles = gameFileReader.ReadAllFiles(_opts.InputPath);
             List<string> firstAndLastBackerWeapons = inputFiles.CraftList
                 .Where(entry => entry.IsBackerWeapon() && !Constants.ItemName16BitCoin.Equals(entry.Value.Ingredient2Id))
@@ -323,7 +323,7 @@ namespace BSTrueRandomizerTest
         {
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestRandomizeDropQuestCraft\";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -343,7 +343,7 @@ namespace BSTrueRandomizerTest
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestConsumablesOnly\";
             _opts.SeedText = "SeedText-SingleInstanceConsumableExistsInMultiples";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);
@@ -362,7 +362,7 @@ namespace BSTrueRandomizerTest
             // Assign
             _opts.InputPath = @"file-resources\ComponentTest\TestConsumablesOnly\";
             _opts.SeedText = "SeedText-UniqueConsumableNeverInCraftList";
-            var gameFileReader = new GameFileService(_opts.InputPath);
+            var gameFileReader = new GameFileService(_opts.InputPath, new UassetService());
 
             // Act
             Program.RunMain(_opts);

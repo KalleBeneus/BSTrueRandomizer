@@ -9,7 +9,7 @@ namespace BSTrueRandomizer.config
         [Option('s', "seed", Required = false,
             HelpText =
                 "Randomization seed provided as a free text string. Not providing this will result in a random seed that is not retrievable by the user.")]
-        public string SeedText { get; set; }
+        public string? SeedText { get; set; }
 
         [Option('t', "type-randomize", Required = false, HelpText = "Randomize chest types")]
         public bool IsRandomizeType { get; set; }
@@ -21,7 +21,7 @@ namespace BSTrueRandomizer.config
         public string OutputPath { get; set; } = Directory.GetCurrentDirectory();
 
         [Option('i', "input", Required = false, HelpText = "Input folder path where DropRate, Quest, Craft and Item master files are located")]
-        public string InputPath { get; set; }
+        public string? InputPath { get; set; }
 
         [Option('j', "json-output", Required = false, HelpText = "Output modified json files into output folder.")]
         public bool IsJsonOutput { get; set; }
@@ -56,15 +56,15 @@ namespace BSTrueRandomizer.config
         public void NormalizeInput()
         {
             SeedText = SeedText?.Trim();
-            OutputPath = NormalizeFolderPath(OutputPath);
+            OutputPath = NormalizeFolderPath(OutputPath)!;
             InputPath = NormalizeFolderPath(InputPath);
         }
 
-        private static string NormalizeFolderPath(string path)
+        private static string? NormalizeFolderPath(string? path)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                return path;
+                return null;
             }
 
             string normalizedPath = path.Trim();

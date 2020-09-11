@@ -8,9 +8,9 @@ namespace BSTrueRandomizer.service
 {
     internal class ItemTypeConverter
     {
-        private static Dictionary<string, string> _masterItemTypes;
+        private readonly Dictionary<string, string> _masterItemTypes;
 
-        private static readonly Dictionary<string, string> TypeConversionMap = new Dictionary<string, string>
+        private readonly Dictionary<string, string> _typeConversionMap = new Dictionary<string, string>
         {
             {"ECarriedCatalog::Potion", Constants.ItemTypeConsumable},
             {"ECarriedCatalog::Food", Constants.ItemTypeFood},
@@ -44,7 +44,7 @@ namespace BSTrueRandomizer.service
 
         public string FindAndConvertItemTypeFromName(string itemName)
         {
-            if (itemName == null || Constants.ItemNameNone.Equals(itemName) || !_masterItemTypes.ContainsKey(itemName))
+            if (Constants.ItemNameNone.Equals(itemName) || !_masterItemTypes.ContainsKey(itemName))
             {
                 return Constants.ItemTypeNone;
             }
@@ -60,7 +60,7 @@ namespace BSTrueRandomizer.service
             }
 
             string masterItemType = _masterItemTypes[itemName];
-            return TypeConversionMap[masterItemType];
+            return _typeConversionMap[masterItemType];
         }
     }
 }

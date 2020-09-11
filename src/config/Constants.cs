@@ -1,4 +1,6 @@
-﻿namespace BSTrueRandomizer.config
+﻿using System.IO;
+
+namespace BSTrueRandomizer.config
 {
     public class Constants
     {
@@ -17,7 +19,6 @@
         public const string ItemTypeUpgrade = "EItemType::Upgrade";
         public const string ItemTypeRecipe = "EItemType::Recipe";
 
-
         public const string FileNameDropRateMaster = "PB_DT_DropRateMaster";
         public const string FileNameQuestMaster = "PB_DT_QuestMaster";
         public const string FileNameCraftMaster = "PB_DT_CraftMaster";
@@ -30,14 +31,15 @@
 
         public const string DefaultPakFileName = "BSTrueRandomizer";
 
-        public const string UassetPathRelativeSub = @"BloodstainedRotN\Content\Core\DataTable\";
-        public const string UassetPathRelativeBase = @"PakContents\";
+        public const string TempFolderName = "BSTrueRandomizerTempFolder";
+        public const string UassetBaseFolderName = @"PakContents";
+        public const string UassetSubPath = @"BloodstainedRotN\Content\Core\DataTable\";
 
         public const string ItemNameNone = "None";
         public const string ItemName8BitCoin = "8BitCoin";
         public const string ItemName16BitCoin = "16BitCoin";
         public const string ItemName32BitCoin = "32BitCoin";
-        
+
         public const string QuestGiverBenjamin = "benjamin";
         public const string QuestGiverSusie = "susie";
     }
