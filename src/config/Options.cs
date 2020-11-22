@@ -1,31 +1,34 @@
 ﻿using System.IO;
 using BSTrueRandomizer.Exceptions;
+using BSTrueRandomizer.util;
 using CommandLine;
 
 namespace BSTrueRandomizer.config
 {
     public class Options
     {
+        private static readonly string DefaultDirectory = Directory.GetCurrentDirectory();
+
         [Option('s', "seed", Required = false,
             HelpText =
                 "Randomization seed provided as a free text string. Not providing this will result in a random seed that is not retrievable by the user.")]
         public string? SeedText { get; set; }
 
-        [Option('t', "type-randomize", Required = false, HelpText = "Randomize chest types")]
+        [Option('t', "type-randomize", Required = false, HelpText = "Randomize chest types. When playing on Retain Type, all non-consumable, non-crafting chests will be fully shuffled.")]
         public bool IsRandomizeType { get; set; }
 
-        [Option('k', "key-locations", Default = 15, Required = false, HelpText = "Set the number of randomly selected key item locations.")]
+        [Option('k', "key-locations", Default = 15, Required = false, HelpText = "Set the number of randomly selected key item locations. This controls the likelihood of key items appearing in chests guarded by bosses. Lower number means higher likelihood. Only valid together with -t flag.")]
         public int NumberOfKeyLocations { get; set; }
 
         [Option('o', "output", Required = false, HelpText = "Output folder path. Defaults to current directory.")]
-        public string OutputPath { get; set; } = Directory.GetCurrentDirectory();
+        public string OutputPath { get; set; } = DefaultDirectory;
 
         [Option('i', "input", Required = false,
             HelpText = "Input folder path where DropRate, Quest, Craft and Item master json/uasset files are located. Defaults to current directory.")]
         public string? InputPath { get; set; }
 
         [Option('u', "unrealpak-path", Required = false, HelpText = "Folder path where UnrealPak.exe is located. Defaults to current directory.")]
-        public string UnrealPakPath { get; set; } = Directory.GetCurrentDirectory();
+        public string UnrealPakPath { get; set; } = DefaultDirectory;
 
         [Option('j', "json-output", Default = false, Required = false, HelpText = "Output modified json files into output folder.")]
         public bool IsJsonOutput { get; set; }
@@ -61,7 +64,11 @@ namespace BSTrueRandomizer.config
                 throw new InputException($"Provided path to UnrealPak executable '{UnrealPakPath}' does not exist.");
             }
 
-            if (!IsJsonOnly && !File.Exists(Path.Combine(UnrealPakPath, Constants.UnrealPakExeFileName)) && !File.Exists(Constants.UnrealPakResourcePath))
+            bool isDefaultPakPath = UnrealPakPath.Equals(NormalizeFolderPath(DefaultDirectory));
+            bool isUserProvidedPathEmpty = !isDefaultPakPath && !File.Exists(Path.Combine(UnrealPakPath, Constants.UnrealPakExeFileName));
+            bool isDefaultPathEmpty = isDefaultPakPath && !File.Exists(Path.Combine(UnrealPakPath, Constants.UnrealPakExeFileName));
+            bool isPakResourceProvided = File.Exists(Path.Combine(FileUtil.getResourcePath(), Constants.UnrealPakResourcePath));
+            if (!IsJsonOnly && (isUserProvidedPathEmpty || (isDefaultPathEmpty && !isPakResourceProvided)))
             {
                 throw new InputException(
                     $"Provided path to UnrealPak executable '{UnrealPakPath}' does not contain an executable named '{Constants.UnrealPakExeFileName}'.");

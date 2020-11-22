@@ -132,7 +132,7 @@ namespace BSTrueRandomizer.service
             string userProvidedUnrealPakPath = Path.Combine(_options.UnrealPakPath, Constants.UnrealPakExeFileName);
             if (!File.Exists(userProvidedUnrealPakPath) || File.Exists(Constants.UnrealPakResourcePath))
             {
-                return Constants.UnrealPakResourcePath;
+                return Path.Combine(FileUtil.getResourcePath(), Constants.UnrealPakResourcePath);
             }
 
             return userProvidedUnrealPakPath;
@@ -142,7 +142,7 @@ namespace BSTrueRandomizer.service
         {
             string fileListPath = Path.Combine(pakContentsParentFolder, Constants.PackageDescriptionFileName);
             string uassetBasePath = Path.Combine(pakContentsParentFolder, Constants.UassetBaseFolderName);
-            string fileListContent = $"\"{uassetBasePath}*.*\" \"..\\..\\..\\*.*\"";
+            string fileListContent = $"\"{uassetBasePath}\\*.*\" \"..\\..\\..\\*.*\"";
             File.WriteAllText(fileListPath, fileListContent);
             return fileListPath;
         }

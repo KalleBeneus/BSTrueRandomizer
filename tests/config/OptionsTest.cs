@@ -154,19 +154,79 @@ namespace BSTrueRandomizerTest.config
         }
 
         [TestMethod]
-        public void TestValidateUnrealPakFolderWithMissingExecutable()
+        public void TestUserProvidedUnrealPakFolderWithMissingExecutable()
         {
+            string providedEmptyExistingPakFolder = Path.Combine(Directory.GetCurrentDirectory(), "tmpUnrealPakTestFolder");
+            Directory.CreateDirectory(providedEmptyExistingPakFolder);
             _options.IsJsonOnly = false;
-            _options.UnrealPakPath = Directory.GetCurrentDirectory();
+            _options.UnrealPakPath = providedEmptyExistingPakFolder;
 
-            Assert.ThrowsException<InputException>(() => _options.Validate());
+            try
+            {
+                Assert.ThrowsException<InputException>(() => _options.Validate());
+            } finally
+            {
+                Directory.Delete(providedEmptyExistingPakFolder);
+            }
         }
 
         [TestMethod]
-        public void TestValidateUnrealPakFolderWithExistingExecutable()
+        public void TestUserProvidedUnrealPakFolderWithMissingExecutableWhenDefaultIsNotEmpty()
+        {
+            string providedEmptyExistingPakFolder = Path.Combine(Directory.GetCurrentDirectory(), "tmpUnrealPakTestFolder");
+            Directory.CreateDirectory(providedEmptyExistingPakFolder);
+            _options.IsJsonOnly = false;
+            _options.UnrealPakPath = providedEmptyExistingPakFolder;
+
+            string dummyFilePath = Path.Combine(Directory.GetCurrentDirectory(), Constants.UnrealPakExeFileName);
+            File.Create(dummyFilePath).Dispose();
+
+            try
+            {
+                Assert.ThrowsException<InputException>(() => _options.Validate());
+            }
+            finally
+            {
+                Directory.Delete(providedEmptyExistingPakFolder);
+                File.Delete(dummyFilePath);
+            }
+        }
+
+        [TestMethod]
+        public void TestUserProvidedUnrealPakFolderWithMissingExecutableWhenProvidedResourceIsNotEmpty()
+        {
+            string providedEmptyExistingPakFolder = Path.Combine(Directory.GetCurrentDirectory(), "tmpUnrealPakTestFolder");
+            Directory.CreateDirectory(providedEmptyExistingPakFolder);
+            _options.IsJsonOnly = false;
+            _options.UnrealPakPath = providedEmptyExistingPakFolder;
+
+            string dummyFilePath = Path.Combine(Directory.GetCurrentDirectory(), Constants.UnrealPakExeFileName);
+            File.Create(dummyFilePath).Dispose();
+
+            const string pakExecutablePath = Constants.UnrealPakResourcePath;
+            DirectoryInfo resourceDir = Directory.GetParent(pakExecutablePath);
+            bool isResourceExists = CreateProvidedResoucePakIfNotExists(pakExecutablePath, resourceDir);
+
+            try
+            {
+                Assert.ThrowsException<InputException>(() => _options.Validate());
+            }
+            finally
+            {
+                Directory.Delete(providedEmptyExistingPakFolder);
+                File.Delete(dummyFilePath);
+                if (!isResourceExists)
+                {
+                    File.Delete(pakExecutablePath);
+                    Directory.Delete(resourceDir.FullName);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestValidateDefaultUnrealPakFolderWithExistingExecutable()
         {
             _options.IsJsonOnly = false;
-            _options.UnrealPakPath = Directory.GetCurrentDirectory();
             string dummyFilePath = Path.Combine(_options.UnrealPakPath, Constants.UnrealPakExeFileName);
             File.Create(dummyFilePath).Dispose();
 
@@ -181,19 +241,13 @@ namespace BSTrueRandomizerTest.config
         }
 
         [TestMethod]
-        public void TestValidateUnrealPakFolderWithExecutableProvided()
+        public void TestValidateUnrealPakUserAndDefaultFolderEmptyProvidedResouceExists()
         {
             _options.IsJsonOnly = false;
-            _options.UnrealPakPath = Directory.GetCurrentDirectory();
-            
-            const string dummyFilePath = Constants.UnrealPakResourcePath;
-            DirectoryInfo resourceDir = Directory.GetParent(dummyFilePath);
-            bool isResourceExists = File.Exists(dummyFilePath);
-            if (!isResourceExists)
-            {
-                Directory.CreateDirectory(resourceDir.FullName);
-                File.Create(dummyFilePath).Dispose();
-            }
+
+            const string pakExecutablePath = Constants.UnrealPakResourcePath;
+            DirectoryInfo resourceDir = Directory.GetParent(pakExecutablePath);
+            bool isResourceExists = CreateProvidedResoucePakIfNotExists(pakExecutablePath, resourceDir);
 
             try
             {
@@ -203,10 +257,22 @@ namespace BSTrueRandomizerTest.config
             {
                 if (!isResourceExists)
                 {
-                    File.Delete(dummyFilePath);
+                    File.Delete(pakExecutablePath);
                     Directory.Delete(resourceDir.FullName);
                 }
             }
+        }
+
+        private static bool CreateProvidedResoucePakIfNotExists(string pakExecutablePath, DirectoryInfo resourceDir)
+        {
+            bool isResourceExists = File.Exists(pakExecutablePath);
+            if (!isResourceExists)
+            {
+                Directory.CreateDirectory(resourceDir.FullName);
+                File.Create(pakExecutablePath).Dispose();
+            }
+
+            return isResourceExists;
         }
 
         [TestMethod]

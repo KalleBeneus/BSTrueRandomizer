@@ -21,6 +21,11 @@ namespace BSTrueRandomizer.model.values
             }
 
             fileName = string.IsNullOrWhiteSpace(extension) ? fileName : Path.ChangeExtension(fileName, extension);
+            if (!string.IsNullOrWhiteSpace(extension))
+            {
+                fileName = Path.ChangeExtension(fileName, extension);
+                defaultFileName = Path.ChangeExtension(defaultFileName, extension);
+            }
 
             DirectoryPath = directoryPath;
             FileName = string.IsNullOrWhiteSpace(fileName) ? defaultFileName : fileName;

@@ -83,5 +83,11 @@ namespace BSTrueRandomizer.util
                 return new byte[0];
             }
         }
+
+        public static string getResourcePath()
+        {
+            string? executionPath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
+            return executionPath?? "";
+        }
     }
 }
