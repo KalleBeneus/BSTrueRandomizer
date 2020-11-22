@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using BSTrueRandomizer.config;
-using BSTrueRandomizer.Exceptions;
 using BSTrueRandomizer.model;
 using BSTrueRandomizer.model.composite;
 using BSTrueRandomizer.model.values;
@@ -15,29 +14,35 @@ namespace BSTrueRandomizer.service
 {
     public class GameFileService
     {
-        private readonly string? _inputFolderPath;
+        private readonly Options _options;
         private readonly ItemTypeConverter _itemTypeConverter;
         private readonly UassetService _uassetService;
 
-        public GameFileService(string? inputFolder, UassetService uassetService)
+        public GameFileService(Options options, UassetService uassetService)
         {
-            _inputFolderPath = inputFolder;
+            _options = options;
             _uassetService = uassetService;
 
-            string fileText = ReadGameFileText(_inputFolderPath, Constants.FileNameItemMaster);
-            var masterItemList = JsonConvert.DeserializeObject<List<MasterItem>>(fileText);
+            string jsonFileName = FileUtil.GetJsonFileName(Constants.FileNameItemMaster);
+            string itemMasterFileContents = FileUtil.ReadFileAsText(options.InputPath, jsonFileName);
+            var masterItemList = JsonConvert.DeserializeObject<List<MasterItem>>(itemMasterFileContents);
             _itemTypeConverter = new ItemTypeConverter(masterItemList);
         }
 
         public GameFiles ReadAllFiles(string folderPath = "")
         {
-            string? path = string.IsNullOrWhiteSpace(folderPath) ? _inputFolderPath : folderPath;
+            string? path = string.IsNullOrWhiteSpace(folderPath) ? _options.InputPath : folderPath;
 
-            string dropMasterString = ReadGameFileText(path, Constants.FileNameDropRateMaster);
+            string jsonFileName = FileUtil.GetJsonFileName(Constants.FileNameDropRateMaster);
+            string dropMasterString = FileUtil.ReadFileAsText(path, jsonFileName);
             var dropList = JsonConvert.DeserializeObject<List<DropItemEntry>>(dropMasterString);
-            string questMasterString = ReadGameFileText(path, Constants.FileNameQuestMaster);
+
+            jsonFileName = FileUtil.GetJsonFileName(Constants.FileNameQuestMaster);
+            string questMasterString = FileUtil.ReadFileAsText(path, jsonFileName);
             var questList = JsonConvert.DeserializeObject<List<QuestItemEntry>>(questMasterString);
-            string craftMasterString = ReadGameFileText(path, Constants.FileNameCraftMaster);
+
+            jsonFileName = FileUtil.GetJsonFileName(Constants.FileNameCraftMaster);
+            string craftMasterString = FileUtil.ReadFileAsText(path, jsonFileName);
             var craftList = JsonConvert.DeserializeObject<List<CraftItemEntry>>(craftMasterString);
 
             SetItemTypesByNameLookup(questList);
@@ -45,30 +50,6 @@ namespace BSTrueRandomizer.service
             SetItemTypesByNameLookup(craftList);
 
             return new GameFiles(craftList, dropList, questList);
-        }
-
-        private string ReadGameFileText(string? userProvidedPath, string fileName)
-        {
-            string jsonFileName = FileUtil.GetJsonFileName(fileName);
-            if (!string.IsNullOrWhiteSpace(userProvidedPath))
-            {
-                var providedFilePath = new FilePath(userProvidedPath, jsonFileName);
-                return TryReadFileContents(providedFilePath);
-            }
-
-            var defaultFilePath = new FilePath(Directory.GetCurrentDirectory(), jsonFileName);
-            return File.Exists(defaultFilePath.FullPath) ? File.ReadAllText(defaultFilePath.FullPath) : FileUtil.GetResourceFileAsString(jsonFileName);
-        }
-
-        private static string TryReadFileContents(FilePath filePath)
-        {
-            if (!File.Exists(filePath.FullPath))
-            {
-                throw new InputException(
-                    $"'{filePath.FileName}' file could not be found in input folder '{filePath.DirectoryPath}'. Add the file or specify another folder with --input <folder path>");
-            }
-
-            return File.ReadAllText(filePath.FullPath);
         }
 
         private void SetItemTypesByNameLookup(IEnumerable<IItemEntry> questList)
@@ -92,36 +73,48 @@ namespace BSTrueRandomizer.service
             File.WriteAllText(outputFilePath.FullPath, jsonOutput, Encoding.UTF8);
         }
 
-        public void WritePackagedModFile(GameFiles gameFiles, FilePath packageFileInfo)
+        public void WritePackagedModFile(GameFiles gameFiles, FilePath packageOutputFilePath)
         {
-            string tempFolder = Path.Combine(packageFileInfo.DirectoryPath, Constants.TempFolderName);
+            string tempFolder = Path.Combine(packageOutputFilePath.DirectoryPath, Constants.TempFolderName);
             string tempAssetsFullPath = Path.Combine(tempFolder, Constants.UassetBaseFolderName, Constants.UassetSubPath);
+            bool isTmpDirAlreadyExists = Directory.Exists(tempFolder);
             Directory.CreateDirectory(tempAssetsFullPath);
 
-            WriteModifiedUassetFile(gameFiles.DropList, new FilePath(tempAssetsFullPath, Constants.FileNameDropRateMaster));
-            WriteModifiedUassetFile(gameFiles.QuestList, new FilePath(tempAssetsFullPath, Constants.FileNameQuestMaster));
-            WriteModifiedUassetFile(gameFiles.CraftList, new FilePath(tempAssetsFullPath, Constants.FileNameCraftMaster));
-
-            CreatePakFile(packageFileInfo, tempFolder);
-
-            Directory.Delete(tempFolder, true);
+            try
+            {
+                WriteModifiedUassetFile(gameFiles.DropList, new FilePath(tempAssetsFullPath, Constants.FileNameDropRateMaster));
+                WriteModifiedUassetFile(gameFiles.QuestList, new FilePath(tempAssetsFullPath, Constants.FileNameQuestMaster));
+                WriteModifiedUassetFile(gameFiles.CraftList, new FilePath(tempAssetsFullPath, Constants.FileNameCraftMaster));
+                CreatePakFile(packageOutputFilePath, tempFolder);
+            }
+            finally
+            {
+                if (!isTmpDirAlreadyExists)
+                {
+                    Directory.Delete(tempFolder, true);
+                }
+            }
         }
 
         private void WriteModifiedUassetFile(IEnumerable<IItemEntry> gameFile, FilePath outputFilePath)
         {
             string modifiedJson = JsonConvert.SerializeObject(gameFile);
-            byte[] uassetData = FileUtil.GetResourceFileAsByteArray(FileUtil.GetUassetFileName(outputFilePath.FileName));
+
+            string uassetFileName = FileUtil.GetUassetFileName(outputFilePath.FileName);
+            byte[] uassetData = FileUtil.ReadFileAsBytes(_options.InputPath, uassetFileName);
+
             _uassetService.WriteModifiedUassetFile(modifiedJson, uassetData, outputFilePath);
         }
 
-        public static void CreatePakFile(FilePath outputFileInfo, string pakContentsParentPath)
+        public void CreatePakFile(FilePath outputFileInfo, string pakContentsParentPath)
         {
-            string fileListPath = WriteFileList(pakContentsParentPath);
+            string fileListPath = WritePackageDescriptionFileToDisk(pakContentsParentPath);
+
             using var pProcess = new Process
             {
                 StartInfo =
                 {
-                    FileName = @"resources\UnrealPak.exe",
+                    FileName = GetUnrealPakPath(),
                     Arguments = $"\"{outputFileInfo.FullPath}\" -create=\"{fileListPath}\"",
                     RedirectStandardOutput = true,
                     WindowStyle = ProcessWindowStyle.Hidden,
@@ -134,14 +127,24 @@ namespace BSTrueRandomizer.service
             pProcess.WaitForExit();
         }
 
-        private static string WriteFileList(string pakContentsParentFolder)
+        private string GetUnrealPakPath()
         {
-            string fileListPath = Path.Combine(pakContentsParentFolder, "filelist.txt");
+            string userProvidedUnrealPakPath = Path.Combine(_options.UnrealPakPath, Constants.UnrealPakExeFileName);
+            if (!File.Exists(userProvidedUnrealPakPath) || File.Exists(Constants.UnrealPakResourcePath))
+            {
+                return Constants.UnrealPakResourcePath;
+            }
+
+            return userProvidedUnrealPakPath;
+        }
+
+        private static string WritePackageDescriptionFileToDisk(string pakContentsParentFolder)
+        {
+            string fileListPath = Path.Combine(pakContentsParentFolder, Constants.PackageDescriptionFileName);
             string uassetBasePath = Path.Combine(pakContentsParentFolder, Constants.UassetBaseFolderName);
             string fileListContent = $"\"{uassetBasePath}*.*\" \"..\\..\\..\\*.*\"";
             File.WriteAllText(fileListPath, fileListContent);
             return fileListPath;
         }
-
     }
 }

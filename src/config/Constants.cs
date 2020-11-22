@@ -34,6 +34,9 @@ namespace BSTrueRandomizer.config
         public const string TempFolderName = "BSTrueRandomizerTempFolder";
         public const string UassetBaseFolderName = @"PakContents";
         public const string UassetSubPath = @"BloodstainedRotN\Content\Core\DataTable\";
+        public const string PackageDescriptionFileName = "filelist.txt";
+        public const string UnrealPakResourcePath = @"resources\UnrealPak.exe";
+        public const string UnrealPakExeFileName = "UnrealPak.exe";
 
         public const string ItemNameNone = "None";
         public const string ItemName8BitCoin = "8BitCoin";

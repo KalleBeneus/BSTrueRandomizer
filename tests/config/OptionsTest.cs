@@ -10,6 +10,13 @@ namespace BSTrueRandomizerTest.config
     {
         private readonly Options _options = new Options();
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This is needed to avoid validation errors for UnrealPakPath in unrelated tests
+            _options.IsJsonOnly = true;
+        }
+
         [TestMethod]
         public void TestValidateEmptySeed()
         {
@@ -128,6 +135,78 @@ namespace BSTrueRandomizerTest.config
             _options.InputPath = null;
 
             _options.Validate();
+        }
+
+        [TestMethod]
+        public void TestValidateNonExistentUnrealPakFolder()
+        {
+            _options.UnrealPakPath = "non-existent/unrealpak/path";
+
+            Assert.ThrowsException<InputException>(() => _options.Validate());
+        }
+
+        [TestMethod]
+        public void TestValidateExistingUnrealPakFolder()
+        {
+            _options.UnrealPakPath = Directory.GetCurrentDirectory();
+
+            _options.Validate();
+        }
+
+        [TestMethod]
+        public void TestValidateUnrealPakFolderWithMissingExecutable()
+        {
+            _options.IsJsonOnly = false;
+            _options.UnrealPakPath = Directory.GetCurrentDirectory();
+
+            Assert.ThrowsException<InputException>(() => _options.Validate());
+        }
+
+        [TestMethod]
+        public void TestValidateUnrealPakFolderWithExistingExecutable()
+        {
+            _options.IsJsonOnly = false;
+            _options.UnrealPakPath = Directory.GetCurrentDirectory();
+            string dummyFilePath = Path.Combine(_options.UnrealPakPath, Constants.UnrealPakExeFileName);
+            File.Create(dummyFilePath).Dispose();
+
+            try
+            {
+                _options.Validate();
+            }
+            finally
+            {
+                File.Delete(dummyFilePath);
+            }
+        }
+
+        [TestMethod]
+        public void TestValidateUnrealPakFolderWithExecutableProvided()
+        {
+            _options.IsJsonOnly = false;
+            _options.UnrealPakPath = Directory.GetCurrentDirectory();
+            
+            const string dummyFilePath = Constants.UnrealPakResourcePath;
+            DirectoryInfo resourceDir = Directory.GetParent(dummyFilePath);
+            bool isResourceExists = File.Exists(dummyFilePath);
+            if (!isResourceExists)
+            {
+                Directory.CreateDirectory(resourceDir.FullName);
+                File.Create(dummyFilePath).Dispose();
+            }
+
+            try
+            {
+                _options.Validate();
+            }
+            finally
+            {
+                if (!isResourceExists)
+                {
+                    File.Delete(dummyFilePath);
+                    Directory.Delete(resourceDir.FullName);
+                }
+            }
         }
 
         [TestMethod]

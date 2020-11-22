@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using BSTrueRandomizer.config;
 using BSTrueRandomizer.Exceptions;
 using BSTrueRandomizer.mod;
@@ -39,7 +38,7 @@ namespace BSTrueRandomizer
             var itemRandomizerService = new ItemRandomizerService(random);
             var uassetService = new UassetService();
 
-            var gameFileService = new GameFileService(opts.InputPath, uassetService);
+            var gameFileService = new GameFileService(opts, uassetService);
 
             var itemPlacementRandomizerMod = new ItemPlacementRandomizerMod(itemRandomizerService);
             var dropTypeRandomizerMod = new DropTypeRandomizerMod(itemRandomizerService, opts);
@@ -66,7 +65,7 @@ namespace BSTrueRandomizer
 
             if (!opts.IsJsonOnly)
             {
-                var packageFilePath = new FilePath(opts.OutputPath, opts.SeedText, extension: Constants.FileExtensionPak, defaultFileName: Constants.DefaultPakFileName);
+                var packageFilePath = new FilePath(opts.OutputPath, opts.SeedText, Constants.FileExtensionPak, Constants.DefaultPakFileName);
                 gameFileService.WritePackagedModFile(gameFiles, packageFilePath);
             }
         }
