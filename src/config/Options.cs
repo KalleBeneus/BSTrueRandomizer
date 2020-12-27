@@ -7,7 +7,7 @@ namespace BSTrueRandomizer.config
 {
     public class Options
     {
-        private static readonly string DefaultDirectory = Directory.GetCurrentDirectory();
+        private static readonly string DefaultDirectory = NormalizeFolderPath(Directory.GetCurrentDirectory())!;
 
         [Option('s', "seed", Required = false,
             HelpText =
@@ -64,14 +64,19 @@ namespace BSTrueRandomizer.config
                 throw new InputException($"Provided path to UnrealPak executable '{UnrealPakPath}' does not exist.");
             }
 
-            bool isDefaultPakPath = UnrealPakPath.Equals(NormalizeFolderPath(DefaultDirectory));
+            bool isDefaultPakPath = UnrealPakPath.Equals(DefaultDirectory);
             bool isUserProvidedPathEmpty = !isDefaultPakPath && !File.Exists(Path.Combine(UnrealPakPath, Constants.UnrealPakExeFileName));
             bool isDefaultPathEmpty = isDefaultPakPath && !File.Exists(Path.Combine(UnrealPakPath, Constants.UnrealPakExeFileName));
-            bool isPakResourceProvided = File.Exists(Path.Combine(FileUtil.getResourcePath(), Constants.UnrealPakResourcePath));
-            if (!IsJsonOnly && (isUserProvidedPathEmpty || (isDefaultPathEmpty && !isPakResourceProvided)))
+            bool isPakResourceProvided = File.Exists(FileUtil.getResourcePath(Constants.UnrealPakResourcePath));
+            if (!IsJsonOnly && isUserProvidedPathEmpty)
             {
                 throw new InputException(
                     $"Provided path to UnrealPak executable '{UnrealPakPath}' does not contain an executable named '{Constants.UnrealPakExeFileName}'.");
+            }
+            if(!IsJsonOnly && isDefaultPathEmpty && !isPakResourceProvided)
+            {
+                throw new InputException(
+                    $"UnrealPak executable was not found. Provide the full path to the folder containing '{Constants.UnrealPakExeFileName}'.");
             }
         }
 

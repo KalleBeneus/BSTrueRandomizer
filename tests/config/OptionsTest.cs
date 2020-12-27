@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using BSTrueRandomizer.config;
 using BSTrueRandomizer.Exceptions;
+using BSTrueRandomizer.util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BSTrueRandomizerTest.config
@@ -203,7 +204,7 @@ namespace BSTrueRandomizerTest.config
             string dummyFilePath = Path.Combine(Directory.GetCurrentDirectory(), Constants.UnrealPakExeFileName);
             File.Create(dummyFilePath).Dispose();
 
-            const string pakExecutablePath = Constants.UnrealPakResourcePath;
+            string pakExecutablePath = FileUtil.getResourcePath(Constants.UnrealPakResourcePath);
             DirectoryInfo resourceDir = Directory.GetParent(pakExecutablePath);
             bool isResourceExists = CreateProvidedResoucePakIfNotExists(pakExecutablePath, resourceDir);
 
@@ -245,10 +246,9 @@ namespace BSTrueRandomizerTest.config
         {
             _options.IsJsonOnly = false;
 
-            const string pakExecutablePath = Constants.UnrealPakResourcePath;
+            string pakExecutablePath = FileUtil.getResourcePath(Constants.UnrealPakResourcePath);
             DirectoryInfo resourceDir = Directory.GetParent(pakExecutablePath);
             bool isResourceExists = CreateProvidedResoucePakIfNotExists(pakExecutablePath, resourceDir);
-
             try
             {
                 _options.Validate();

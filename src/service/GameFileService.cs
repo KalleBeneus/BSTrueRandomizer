@@ -132,7 +132,7 @@ namespace BSTrueRandomizer.service
             string userProvidedUnrealPakPath = Path.Combine(_options.UnrealPakPath, Constants.UnrealPakExeFileName);
             if (!File.Exists(userProvidedUnrealPakPath) || File.Exists(Constants.UnrealPakResourcePath))
             {
-                return Path.Combine(FileUtil.getResourcePath(), Constants.UnrealPakResourcePath);
+                return FileUtil.getResourcePath(Constants.UnrealPakResourcePath);
             }
 
             return userProvidedUnrealPakPath;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using BSTrueRandomizer.config;
 using BSTrueRandomizer.Exceptions;
 using BSTrueRandomizer.mod;
@@ -65,7 +66,7 @@ namespace BSTrueRandomizer
 
             if (!opts.IsJsonOnly)
             {
-                var packageFilePath = new FilePath(opts.OutputPath, opts.SeedText, Constants.FileExtensionPak, Constants.DefaultPakFileName);
+                var packageFilePath = new FilePath(Path.GetFullPath(opts.OutputPath), opts.SeedText, Constants.FileExtensionPak, Constants.DefaultPakFileName);
                 gameFileService.WritePackagedModFile(gameFiles, packageFilePath);
             }
         }

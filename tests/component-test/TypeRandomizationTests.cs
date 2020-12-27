@@ -76,6 +76,7 @@ namespace BSTrueRandomizerTest
 
             AssertEntriesWithTypeAreUnchanged(inputDropList, outputDropList, Constants.ItemTypeConsumable);
             AssertEntriesWithTypeAreUnchanged(inputDropList, outputDropList, Constants.ItemTypeCraftingMaterials);
+            AssertEntriesWithTypeAreUnchanged(inputDropList, outputDropList, Constants.ItemTypeNone);
         }
 
         [TestMethod]

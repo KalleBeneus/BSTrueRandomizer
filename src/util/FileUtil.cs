@@ -84,10 +84,10 @@ namespace BSTrueRandomizer.util
             }
         }
 
-        public static string getResourcePath()
+        public static string getResourcePath(string relativePath = "")
         {
             string? executionPath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
-            return executionPath?? "";
+            return Path.Combine(executionPath?? "", relativePath);
         }
     }
 }

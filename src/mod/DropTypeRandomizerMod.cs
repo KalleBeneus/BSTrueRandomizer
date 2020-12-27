@@ -14,16 +14,17 @@ namespace BSTrueRandomizer.mod
     {
         private const string ItemTypeNonKey = Constants.ItemTypeWeapon;
 
-        private readonly Dictionary<string, int> _fixedKeyLocations = new Dictionary<string, int>
+        private readonly Dictionary<int, string> _fixedKeyLocations = new Dictionary<int, string>
         {
-            {"VillageKeyBox", 19},
-            {"PhotoEvent", 21},
-            {"CertificationboardEvent", 22},
-            {"Swordsman", 24},
-            {"Treasurebox_SAN024", 183},
-            {"Treasurebox_TWR019", 216},
-            {"Treasurebox_KNG021", 269},
-            {"Treasurebox_ARC006", 386}
+            {19, "VillageKeyBox"},
+            {21, "PhotoEvent"},
+            {22, "CertificationboardEvent"},
+            {24, "Swordsman"},
+            {183, "Treasurebox_SAN024"},
+            {216, "Treasurebox_TWR019"},
+            {217, "Treasurebox_TWR019"},
+            {269, "Treasurebox_KNG021"},
+            {386, "Treasurebox_ARC006"}
         };
 
         private readonly ItemRandomizerService _randomizerService;
@@ -45,7 +46,8 @@ namespace BSTrueRandomizer.mod
 
         private bool IsEntryRandomizable(DropItemEntry entry)
         {
-            // Due to mistakes in the original game files, these types should never be changed
+            // Due to mistakes in the original game files, these types should be kept as-is to only allow them to shuffle between themselves.
+            // This avoids problems with important items being shuffled out of the game
             string itemType = entry.GetItemType();
             return entry.IsEntryValid()
                    && !Constants.ItemTypeCraftingMaterials.Equals(itemType)
@@ -73,7 +75,7 @@ namespace BSTrueRandomizer.mod
 
         private bool IsFixedKeyItemLocation(DropItemEntry itemEntry)
         {
-            return _fixedKeyLocations.ContainsKey(itemEntry.Key) && itemEntry.Value.Id.Equals(_fixedKeyLocations[itemEntry.Key]);
+            return _fixedKeyLocations.ContainsKey(itemEntry.Value.Id) && itemEntry.Key.Equals(_fixedKeyLocations[itemEntry.Value.Id]);
         }
 
         private void SetKeyTypeForRandomAndFixedLocations(IEnumerable<DropItemEntry> gameDataToModify, ICollection<DropItemEntry> entriesToSetAsKey)
