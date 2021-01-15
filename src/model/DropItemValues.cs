@@ -7,6 +7,7 @@ namespace BSTrueRandomizer.model
     public class DropItemValues
     {
         [DataMember(IsRequired = true)] public int Id { get; set; }
+        [DataMember(IsRequired = true)] public string DropSpecialFlags { get; set; } = default!;
         [DataMember(IsRequired = true)] public string ShardId { get; set; } = default!;
         [DataMember(IsRequired = true)] public double ShardRate { get; set; }
         [DataMember(IsRequired = true)] public string RareItemId { get; set; } = default!;
